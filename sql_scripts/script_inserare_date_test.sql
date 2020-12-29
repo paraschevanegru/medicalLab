@@ -18,7 +18,16 @@ INSERT INTO asistenti VALUES (NULL, 105, 'Ioan', '0747384545', 'ioan@ceva.com' )
 INSERT INTO asistenti VALUES (NULL, 106, 'Maria', '0739984545', 'maria@ceva.com' );
 SELECT * FROM asistenti;
 
-
+INSERT INTO programari VALUES (NULL, 140121, TO_DATE('14.01.2021', 'DD.MM.YYYY'), (SELECT id_pacient FROM pacienti WHERE cnp = 5030715220079), ( SELECT id_asistent FROM asistenti WHERE cod_asistent = 100));
+INSERT INTO programari VALUES (NULL, 230121, TO_DATE('23.01.2021', 'DD.MM.YYYY'), (SELECT id_pacient FROM pacienti WHERE cnp = 5001202220065), ( SELECT id_asistent FROM asistenti WHERE cod_asistent = 100));
+INSERT INTO programari VALUES (NULL, 240121, TO_DATE('24.01.2021', 'DD.MM.YYYY'), (SELECT id_pacient FROM pacienti WHERE cnp = 5110123220021), ( SELECT id_asistent FROM asistenti WHERE cod_asistent = 104));
+INSERT INTO programari VALUES (NULL, 140121, TO_DATE('14.01.2021', 'DD.MM.YYYY'), (SELECT id_pacient FROM pacienti WHERE cnp = 2860921220052), ( SELECT id_asistent FROM asistenti WHERE cod_asistent = 105));
+INSERT INTO programari VALUES (NULL, 140121, TO_DATE('14.01.2021', 'DD.MM.YYYY'), (SELECT id_pacient FROM pacienti WHERE cnp = 1991114220036), ( SELECT id_asistent FROM asistenti WHERE cod_asistent = 104));
+INSERT INTO programari VALUES (NULL, 110121, TO_DATE('11.01.2021', 'DD.MM.YYYY'), (SELECT id_pacient FROM pacienti WHERE cnp = 6150501220018), ( SELECT id_asistent FROM asistenti WHERE cod_asistent = 103));
+INSERT INTO programari VALUES (NULL, 100121, TO_DATE('10.01.2021', 'DD.MM.YYYY'), (SELECT id_pacient FROM pacienti WHERE cnp = 2700311220047), ( SELECT id_asistent FROM asistenti WHERE cod_asistent = 103));
+INSERT INTO programari VALUES (NULL, 190121, TO_DATE('19.01.2021', 'DD.MM.YYYY'), (SELECT id_pacient FROM pacienti WHERE cnp = 2901009220086), ( SELECT id_asistent FROM asistenti WHERE cod_asistent = 102));
+--INSERT INTO programari VALUES (NULL, 190121, TO_DATE('19.01.2021', 'DD.MM.YYYY'), );--
+SELECT * FROM programari;
 
 INSERT INTO laboranti VALUES (NULL, 101, 'Andreea', 'Chimist', '0788867542', 'andreea@ceva.com' );
 INSERT INTO laboranti VALUES (NULL, 105, 'Andrei', 'Biochimist', '0789867542', 'andrei@ceva.com' );
