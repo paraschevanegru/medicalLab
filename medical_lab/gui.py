@@ -2,7 +2,7 @@ import tkinter as tk
 
 
 class GUI:
-    def __init__(self, window) -> None:
+    def __init__(self, window, config) -> None:
         self.window = window
         self.window.resizable(False, False)
 
