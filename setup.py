@@ -9,6 +9,7 @@ setup(
     description="Encryption and uploading tool.",
     long_description="",
     packages=["medical_lab"],
+    package_data={"": ["*.ini"]},
     entry_points={"console_scripts": ["medicalgui=medical_lab.__main__:main"]},
     platforms="any",
     classifiers=[
