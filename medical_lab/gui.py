@@ -4,6 +4,7 @@ from .frames.login_frame import LoginFrame
 from .frames.asistent_frame import AsistentFrame
 from .frames.laborant_frame import LaborantFrame
 from .frames.pacient_frame import PacientFrame
+from .frames.main_frame import MainFrame
 
 
 class GUI:
@@ -24,7 +25,7 @@ class GUI:
         self.user_info = {}
 
         self.frames = {}
-        for F in (PacientFrame, AsistentFrame, LaborantFrame, LoginFrame):
+        for F in (PacientFrame, AsistentFrame, LaborantFrame, LoginFrame, MainFrame):
             page_name = F.__name__
             frame = F(parent=self.container, controller=self)
             self.frames[page_name] = frame
@@ -35,7 +36,7 @@ class GUI:
         for frame in self.frames.values():
             for widget in frame.winfo_children():
                 widget.destroy()
-        for F in (PacientFrame, AsistentFrame, LaborantFrame, LoginFrame):
+        for F in (PacientFrame, AsistentFrame, LaborantFrame, LoginFrame, MainFrame):
             page_name = F.__name__
             frame = F(parent=self.container, controller=self)
             self.frames[page_name] = frame

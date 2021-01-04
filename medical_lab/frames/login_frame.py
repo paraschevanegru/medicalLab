@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import font as tkfont, ttk
+from typing import Coroutine
 from .base_frame import TitleFrame
 
 
@@ -15,12 +16,12 @@ class LoginFrame(TitleFrame):
         text_font = tkfont.Font(family="Helvetica", size=13)
         button_font = tkfont.Font(family="Helvetica", size=10)
 
-        login_frame = tk.Frame(master=self, bg="gold")
+        login_frame = tk.Frame(master=self, bg="gray97")
         login_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
         login_frame.grid_rowconfigure(0, weight=1)
         login_frame.grid_columnconfigure(0, weight=1)
 
-        login_label_frame = tk.LabelFrame(login_frame, bg="white")
+        login_label_frame = tk.LabelFrame(login_frame, bg="white", bd=0)
         login_label_frame.grid(row=0, column=0)
 
         tk.Label(
@@ -31,17 +32,20 @@ class LoginFrame(TitleFrame):
             fg="#000000",
             width=width_label,
         ).grid(row=0, column=0, padx=5, pady=10)
+        options = ["asistent", "laborant", "pacient"]
         self.variable = tk.StringVar(login_label_frame)
-        self.variable.set("asistent")
-        self.account_entry = tk.OptionMenu(login_label_frame, self.variable, "asistent", "laborant", "pacient")
+        self.variable.set(options[0])
+        self.account_entry = tk.OptionMenu(login_label_frame, self.variable, *options, command=self._change_id_label)
         self.account_entry.grid(
             row=0,
             column=1,
         )
+        self._id_label = tk.StringVar()
+        self._id_label.set("employee id")
 
         tk.Label(
             login_label_frame,
-            text="id",
+            textvariable=self._id_label,
             font=text_font,
             bg=login_label_frame["bg"],
             fg="#000000",
@@ -54,6 +58,10 @@ class LoginFrame(TitleFrame):
             login_label_frame, text="Login", font=button_font, command=self.on_login, bg="#4380FA", fg="white"
         )
         self.login_button.grid(row=2, column=1, padx=5, pady=5)
+
+    def _change_id_label(self, value):
+        label = "employee id" if value in ["asistent", "laborant"] else "cnp pacient"
+        self._id_label.set(label)
 
     def set_states(self, user_level):
         if user_level == "pacient":
@@ -85,7 +93,8 @@ class LoginFrame(TitleFrame):
             self.controller.recreate_frame()
             self.set_states(account)
 
-            self.controller.render_frame("LoginFrame")
+            self.controller.frames["MainFrame"].main_frame_welcome_label_var.set(f"Welcome {user_info[1]}")
+            self.controller.render_frame("MainFrame")
         else:
             from tkinter import messagebox
 
