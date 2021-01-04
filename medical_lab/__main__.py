@@ -9,6 +9,7 @@ def main():
     config = configparser.ConfigParser()
     config.read(config_path)
     root = tk.Tk()
+    root.geometry("1280x700")
     GUI(root, config)
     root.mainloop()
 
