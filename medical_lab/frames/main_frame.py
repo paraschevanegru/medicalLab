@@ -10,7 +10,7 @@ class MainFrame(TitleFrame):
         self.init()
 
     def init(self):
-        bg_color = "gray97"
+        bg_color = "white"
         btn_fg = "white"
         button_font = tkfont.Font(family="Helvetica", size=10)
 

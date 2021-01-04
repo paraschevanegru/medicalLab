@@ -27,6 +27,7 @@ docker ps
 #### Run medicalgui
 ```
 git clone https://github.com/paraschevanegru/medicalLab.git
+pip install -r requirements.txt
 pip install ./medicalLab
 
 medicalgui  # launches graphical tool

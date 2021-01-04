@@ -36,10 +36,7 @@ class LoginFrame(TitleFrame):
         self.variable = tk.StringVar(login_label_frame)
         self.variable.set(options[0])
         self.account_entry = tk.OptionMenu(login_label_frame, self.variable, *options, command=self._change_id_label)
-        self.account_entry.grid(
-            row=0,
-            column=1,
-        )
+        self.account_entry.grid(row=0, column=1, sticky="ew")
         self._id_label = tk.StringVar()
         self._id_label.set("employee id")
 
