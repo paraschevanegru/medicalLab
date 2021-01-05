@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import font as tkfont
+from PIL import Image, ImageTk
+from pathlib import Path
 
 
 class TitleFrame(tk.Frame):
@@ -16,9 +18,12 @@ class TitleFrame(tk.Frame):
         for i in range(2):
             title_frame.grid_columnconfigure(i, weight=1)
 
-        tk.Label(master=title_frame, text="Medical", font=self.title_font, fg="#4380FA", bg=title_frame["bg"]).grid(
-            row=0, column=0, sticky="e"
-        )
-        tk.Label(title_frame, text="Laboratory", font=self.title_font, fg="#4380FA", bg=title_frame["bg"]).grid(
-            row=0, column=1, sticky="w"
-        )
+        logo = Image.open(Path(__file__).parent / "logo.png")
+        logo = logo.resize((25, 25), Image.ANTIALIAS)
+        render = ImageTk.PhotoImage(logo)
+        img = tk.Label(self, image=render, bd=0)
+        tk.Label(
+            master=title_frame, text="Medical Laboratory", font=self.title_font, fg="#4380FA", bg=title_frame["bg"]
+        ).grid(row=0, column=0, padx=42, pady=10, sticky="w")
+        img.image = render
+        img.place(x=10, y=10)
