@@ -21,15 +21,17 @@ class AsistentFrame(TitleFrame):
         main_frame = tk.Frame(master=self, bg=self.bg_color)
         main_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
         main_frame.grid_rowconfigure(1, weight=1)
-        main_frame.grid_columnconfigure(0, weight=1)
-        main_frame.grid_columnconfigure(1, weight=1)
+        for r in range(10):
+            main_frame.rowconfigure(r, weight=1)
+        for c in range(6):
+            main_frame.columnconfigure(c, weight=1)
 
         welcome_label_frame = tk.LabelFrame(main_frame, bg="red", bd=0)
-        welcome_label_frame.grid(column=2, row=0, columnspan=2, ipadx=430, ipady=0, sticky="NSEW")
+        welcome_label_frame.grid(column=1, row=1, columnspan=6, rowspan=1, sticky="NSEW")
 
         query = list(map("".join, self.controller.get_columns_name("asistenti")))
         self.table = TableFrame(main_frame, query)
-        self.table.grid(row=1, column=1, sticky="nsew")
+        self.table.grid(row=2, column=1, columnspan=6, rowspan=9, sticky="nsew")
         # self.populate_the_table_with_all_values()
         self.table.tree.bind("<<TreeviewSelect>>")
         self.init_dashboard(main_frame)
@@ -53,8 +55,8 @@ class AsistentFrame(TitleFrame):
     def init_dashboard(self, parent):
 
         self.dashboard_frame = tk.LabelFrame(parent, bg="gray97", bd=0)
-        self.dashboard_frame.grid(row=1, column=0, columnspan=1, sticky="w")
-        self.dashboard_frame.place(x=0, y=0, anchor="nw", width=225, height=650)
+        self.dashboard_frame.grid(row=1, column=0, columnspan=1, sticky="nsew")
+        # self.dashboard_frame.place(x=0, y=0, anchor="nw", width=225, height=650)
 
         tk.Label(
             self.dashboard_frame,
@@ -62,39 +64,112 @@ class AsistentFrame(TitleFrame):
             font=self.title_font,
             bg="gray97",
             fg="#99CCFF",
-        ).grid(row=0, column=0, padx=35, pady=10)
+        ).grid(row=1, column=0, rowspan=6, padx=10, pady=10)
+
+        payment_button_frame = tk.LabelFrame(self.dashboard_frame, bg="gray97", bd=0)
+        payment_button_frame.grid(row=1, column=0, pady=10)
         tk.Button(
-            self.dashboard_frame,
+            payment_button_frame,
             text="Add payment",
             font=self.button_font,
             bg="gray97",
             fg="#4380FA",
             relief="flat",
             width=20,
-            command=lambda: self.NewPage(),
-        ).grid(row=1, column=0, padx=35, pady=15, sticky="w")
+            command=lambda: self.AddPayment(),
+        ).grid(row=2, column=0, padx=30, pady=5, sticky="w")
 
         tk.Button(
-            self.dashboard_frame,
+            payment_button_frame,
+            text="Remove payment",
+            font=self.button_font,
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=20,
+            command=lambda: self.RemovePayment(),
+        ).grid(row=3, column=0, padx=30, pady=5, sticky="w")
+
+        tk.Button(
+            payment_button_frame,
+            text="Update payment",
+            font=self.button_font,
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=20,
+            command=lambda: self.UpdatePayment(),
+        ).grid(row=4, column=0, padx=30, pady=5, sticky="w")
+
+        appointment_button_frame = tk.LabelFrame(self.dashboard_frame, bg="gray97", bd=0)
+        appointment_button_frame.grid(row=2, column=0, pady=10)
+        tk.Button(
+            appointment_button_frame,
             text="Add appointment",
             font=self.button_font,
             bg="gray97",
             fg="#4380FA",
             relief="flat",
             width=20,
-            command=lambda: self.NewPage(),
-        ).grid(row=2, column=0, padx=35, pady=15, sticky="w")
+            command=lambda: self.AddAppointment(),
+        ).grid(row=5, column=0, padx=35, pady=5, sticky="w")
 
         tk.Button(
-            self.dashboard_frame,
+            appointment_button_frame,
+            text="Remove appointment",
+            font=self.button_font,
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=20,
+            command=lambda: self.RemoveAppointment(),
+        ).grid(row=6, column=0, padx=35, pady=5, sticky="w")
+
+        tk.Button(
+            appointment_button_frame,
+            text="Update appointment",
+            font=self.button_font,
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=20,
+            command=lambda: self.UpdateAppointment(),
+        ).grid(row=7, column=0, padx=35, pady=5, sticky="w")
+
+        administeredtest_button_frame = tk.LabelFrame(self.dashboard_frame, bg="gray97", bd=0)
+        administeredtest_button_frame.grid(row=3, column=0, pady=10)
+        tk.Button(
+            administeredtest_button_frame,
             text="Add administered test",
             font=self.button_font,
             bg="gray97",
             fg="#4380FA",
             relief="flat",
             width=20,
-            command=lambda: self.NewPage(),
-        ).grid(row=3, column=0, padx=35, pady=15, sticky="w")
+            command=lambda: self.AddAdministeredTest(),
+        ).grid(row=8, column=0, padx=35, pady=5, sticky="w")
+
+        tk.Button(
+            administeredtest_button_frame,
+            text="Remove administered test",
+            font=self.button_font,
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=20,
+            command=lambda: self.RemoveAdministeredTest(),
+        ).grid(row=9, column=0, padx=35, pady=5, sticky="w")
+
+        tk.Button(
+            administeredtest_button_frame,
+            text="Update administered test",
+            font=self.button_font,
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=20,
+            command=lambda: self.UpdateAdministeredTest(),
+        ).grid(row=10, column=0, padx=35, pady=5, sticky="w")
 
     def on_logout(self):
         from tkinter import messagebox
@@ -102,50 +177,650 @@ class AsistentFrame(TitleFrame):
         if messagebox.askokcancel("Logout", "Are you sure you want to logout?"):
             self.controller.render_frame("LoginFrame")
 
-    def NewPage(self):
+    def AddAppointment(self):
         print("New Page")
         self.win2 = tk.Toplevel()
-        self.win2.title("Add payment")
+        self.win2.title("Add Appointment")
         self.win2.geometry("500x500")
         self.win2.resizable(0, 0)
         self.win2.config(bg="gray97")
-        width_label = 7
+        width_label = 18
 
-        shop_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        shop_insert_frame.grid(row=0, column=0, pady=15, padx=130, sticky="w")
-        tk.Label(shop_insert_frame, text=" ", bg=shop_insert_frame["bg"], fg="#4380FA", width=width_label).grid(
-            row=0, column=0
-        )
-        self.shop_name_insert = tk.Entry(shop_insert_frame)
-        self.shop_name_insert.grid(row=0, column=1, padx=5, pady=5)
+        cod_programare_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        cod_programare_insert_frame.grid(row=0, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            cod_programare_insert_frame,
+            text="Appointment Code ",
+            bg=cod_programare_insert_frame["bg"],
+            fg="#4380FA",
+            width=width_label,
+        ).grid(row=0, column=0)
+        self.cod_programare_insert = tk.Entry(cod_programare_insert_frame)
+        self.cod_programare_insert.grid(row=0, column=1, padx=5, pady=10)
 
-        street_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        street_insert_frame.grid(row=1, column=0, pady=15, padx=130, sticky="w")
-        tk.Label(street_insert_frame, text=" ", bg=street_insert_frame["bg"], fg="#4380FA", width=width_label).grid(
-            row=0, column=0
-        )
-        self.street_name_insert = tk.Entry(street_insert_frame)
-        self.street_name_insert.grid(row=0, column=1, padx=5, pady=5)
+        data_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        data_insert_frame.grid(row=1, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            data_insert_frame, text="Appointment Date ", bg=data_insert_frame["bg"], fg="#4380FA", width=width_label
+        ).grid(row=0, column=0)
+        self.data_prog_insert = tk.Entry(data_insert_frame)
+        self.data_prog_insert.grid(row=0, column=1, padx=5, pady=10)
 
-        city_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        city_insert_frame.grid(row=2, column=0, pady=15, padx=130, sticky="w")
-        tk.Label(city_insert_frame, text=" ", bg=city_insert_frame["bg"], fg="#4380FA", width=width_label).grid(
-            row=0, column=0
-        )
-        self.city_name_insert = tk.Entry(city_insert_frame)
-        self.city_name_insert.grid(row=0, column=1, padx=5, pady=5)
+        nume_pacient_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        nume_pacient_insert_frame.grid(row=2, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            nume_pacient_insert_frame,
+            text="Pacient Name ",
+            bg=nume_pacient_insert_frame["bg"],
+            fg="#4380FA",
+            width=width_label,
+        ).grid(row=0, column=0)
+        self.nume_pacient_insert = tk.Entry(nume_pacient_insert_frame)
+        self.nume_pacient_insert.grid(row=0, column=1, padx=5, pady=10)
 
-        country_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        country_insert_frame.grid(row=3, column=0, pady=15, padx=130, sticky="w")
-        tk.Label(country_insert_frame, text=" ", bg=country_insert_frame["bg"], fg="#4380FA", width=width_label).grid(
-            row=0, column=0
-        )
-        self.country_name_insert = tk.Entry(country_insert_frame)
-        self.country_name_insert.grid(row=0, column=1, padx=5, pady=5)
+        cnp_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        cnp_insert_frame.grid(row=3, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            cnp_insert_frame, text="Pacient CNP ", bg=cnp_insert_frame["bg"], fg="#4380FA", width=width_label
+        ).grid(row=0, column=0)
+        self.cnp_insert = tk.Entry(cnp_insert_frame)
+        self.cnp_insert.grid(row=0, column=1, padx=5, pady=10)
 
         tk.Button(
             self.win2,
             text="Insert",
+            font=("Helvetica", 10),
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=15,
+            height=2,
+            command=self.Quit,
+        ).place(x=80, y=450)
+        a2 = tk.Button(
+            self.win2,
+            text=("Exit"),
+            font=("Helvetica", 10),
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=15,
+            height=2,
+            command=self.Quit,
+        )
+        a2.place(x=270, y=450)
+        self.win2.mainloop()
+
+    def UpdateAppointment(self):
+        print("New Page")
+        self.win2 = tk.Toplevel()
+        self.win2.title("Update Appointment")
+        self.win2.geometry("500x500")
+        self.win2.resizable(0, 0)
+        self.win2.config(bg="gray97")
+        width_label = 18
+
+        cod_programare_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        cod_programare_insert_frame.grid(row=0, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            cod_programare_insert_frame,
+            text="Appointment Code ",
+            bg=cod_programare_insert_frame["bg"],
+            fg="#4380FA",
+            width=width_label,
+        ).grid(row=0, column=0)
+        self.cod_programare_insert = tk.Entry(cod_programare_insert_frame)
+        self.cod_programare_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        data_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        data_insert_frame.grid(row=1, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            data_insert_frame, text="Appointment Date ", bg=data_insert_frame["bg"], fg="#4380FA", width=width_label
+        ).grid(row=0, column=0)
+        self.data_prog_insert = tk.Entry(data_insert_frame)
+        self.data_prog_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        nume_pacient_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        nume_pacient_insert_frame.grid(row=2, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            nume_pacient_insert_frame,
+            text="Pacient Name ",
+            bg=nume_pacient_insert_frame["bg"],
+            fg="#4380FA",
+            width=width_label,
+        ).grid(row=0, column=0)
+        self.nume_pacient_insert = tk.Entry(nume_pacient_insert_frame)
+        self.nume_pacient_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        cnp_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        cnp_insert_frame.grid(row=3, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            cnp_insert_frame, text="Pacient CNP ", bg=cnp_insert_frame["bg"], fg="#4380FA", width=width_label
+        ).grid(row=0, column=0)
+        self.cnp_insert = tk.Entry(cnp_insert_frame)
+        self.cnp_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        tk.Button(
+            self.win2,
+            text="Update",
+            font=("Helvetica", 10),
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=15,
+            height=2,
+            command=self.Quit,
+        ).place(x=80, y=450)
+        a2 = tk.Button(
+            self.win2,
+            text=("Exit"),
+            font=("Helvetica", 10),
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=15,
+            height=2,
+            command=self.Quit,
+        )
+        a2.place(x=270, y=450)
+        self.win2.mainloop()
+
+    def RemoveAppointment(self):
+        print("New Page")
+        self.win2 = tk.Toplevel()
+        self.win2.title("Remove Appointment")
+        self.win2.geometry("500x500")
+        self.win2.resizable(0, 0)
+        self.win2.config(bg="gray97")
+        width_label = 18
+
+        cod_programare_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        cod_programare_insert_frame.grid(row=0, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            cod_programare_insert_frame,
+            text="Appointment Code ",
+            bg=cod_programare_insert_frame["bg"],
+            fg="#4380FA",
+            width=width_label,
+        ).grid(row=0, column=0)
+        self.cod_programare_insert = tk.Entry(cod_programare_insert_frame)
+        self.cod_programare_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        data_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        data_insert_frame.grid(row=1, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            data_insert_frame, text="Appointment Date ", bg=data_insert_frame["bg"], fg="#4380FA", width=width_label
+        ).grid(row=0, column=0)
+        self.data_prog_insert = tk.Entry(data_insert_frame)
+        self.data_prog_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        nume_pacient_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        nume_pacient_insert_frame.grid(row=2, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            nume_pacient_insert_frame,
+            text="Pacient Name ",
+            bg=nume_pacient_insert_frame["bg"],
+            fg="#4380FA",
+            width=width_label,
+        ).grid(row=0, column=0)
+        self.nume_pacient_insert = tk.Entry(nume_pacient_insert_frame)
+        self.nume_pacient_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        cnp_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        cnp_insert_frame.grid(row=3, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            cnp_insert_frame, text="Pacient CNP ", bg=cnp_insert_frame["bg"], fg="#4380FA", width=width_label
+        ).grid(row=0, column=0)
+        self.cnp_insert = tk.Entry(cnp_insert_frame)
+        self.cnp_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        tk.Button(
+            self.win2,
+            text="Remove",
+            font=("Helvetica", 10),
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=15,
+            height=2,
+            command=self.Quit,
+        ).place(x=80, y=450)
+        a2 = tk.Button(
+            self.win2,
+            text=("Exit"),
+            font=("Helvetica", 10),
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=15,
+            height=2,
+            command=self.Quit,
+        )
+        a2.place(x=270, y=450)
+        self.win2.mainloop()
+
+    def AddAdministeredTest(self):
+        print("New Page")
+        self.win2 = tk.Toplevel()
+        self.win2.title("Add Administered Test")
+        self.win2.geometry("500x500")
+        self.win2.resizable(0, 0)
+        self.win2.config(bg="gray97")
+        width_label = 18
+
+        cod_programare_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        cod_programare_insert_frame.grid(row=0, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            cod_programare_insert_frame,
+            text="Appointment Code ",
+            bg=cod_programare_insert_frame["bg"],
+            fg="#4380FA",
+            width=width_label,
+        ).grid(row=0, column=0)
+        self.cod_programare_insert = tk.Entry(cod_programare_insert_frame)
+        self.cod_programare_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        data_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        data_insert_frame.grid(row=1, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            data_insert_frame, text="Appointment Date ", bg=data_insert_frame["bg"], fg="#4380FA", width=width_label
+        ).grid(row=0, column=0)
+        self.data_prog_insert = tk.Entry(data_insert_frame)
+        self.data_prog_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        nume_pacient_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        nume_pacient_insert_frame.grid(row=2, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            nume_pacient_insert_frame,
+            text="Pacient Name ",
+            bg=nume_pacient_insert_frame["bg"],
+            fg="#4380FA",
+            width=width_label,
+        ).grid(row=0, column=0)
+        self.nume_pacient_insert = tk.Entry(nume_pacient_insert_frame)
+        self.nume_pacient_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        cnp_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        cnp_insert_frame.grid(row=3, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            cnp_insert_frame, text="Pacient CNP ", bg=cnp_insert_frame["bg"], fg="#4380FA", width=width_label
+        ).grid(row=0, column=0)
+        self.cnp_insert = tk.Entry(cnp_insert_frame)
+        self.cnp_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        tk.Button(
+            self.win2,
+            text="Insert",
+            font=("Helvetica", 10),
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=15,
+            height=2,
+            command=self.Quit,
+        ).place(x=80, y=450)
+        a2 = tk.Button(
+            self.win2,
+            text=("Exit"),
+            font=("Helvetica", 10),
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=15,
+            height=2,
+            command=self.Quit,
+        )
+        a2.place(x=270, y=450)
+        self.win2.mainloop()
+
+    def UpdateAdministeredTest(self):
+        print("New Page")
+        self.win2 = tk.Toplevel()
+        self.win2.title("Update Administered Test")
+        self.win2.geometry("500x500")
+        self.win2.resizable(0, 0)
+        self.win2.config(bg="gray97")
+        width_label = 18
+
+        cod_programare_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        cod_programare_insert_frame.grid(row=0, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            cod_programare_insert_frame,
+            text="Appointment Code ",
+            bg=cod_programare_insert_frame["bg"],
+            fg="#4380FA",
+            width=width_label,
+        ).grid(row=0, column=0)
+        self.cod_programare_insert = tk.Entry(cod_programare_insert_frame)
+        self.cod_programare_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        data_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        data_insert_frame.grid(row=1, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            data_insert_frame, text="Appointment Date ", bg=data_insert_frame["bg"], fg="#4380FA", width=width_label
+        ).grid(row=0, column=0)
+        self.data_prog_insert = tk.Entry(data_insert_frame)
+        self.data_prog_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        nume_pacient_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        nume_pacient_insert_frame.grid(row=2, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            nume_pacient_insert_frame,
+            text="Pacient Name ",
+            bg=nume_pacient_insert_frame["bg"],
+            fg="#4380FA",
+            width=width_label,
+        ).grid(row=0, column=0)
+        self.nume_pacient_insert = tk.Entry(nume_pacient_insert_frame)
+        self.nume_pacient_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        cnp_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        cnp_insert_frame.grid(row=3, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            cnp_insert_frame, text="Pacient CNP ", bg=cnp_insert_frame["bg"], fg="#4380FA", width=width_label
+        ).grid(row=0, column=0)
+        self.cnp_insert = tk.Entry(cnp_insert_frame)
+        self.cnp_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        tk.Button(
+            self.win2,
+            text="Update",
+            font=("Helvetica", 10),
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=15,
+            height=2,
+            command=self.Quit,
+        ).place(x=80, y=450)
+        a2 = tk.Button(
+            self.win2,
+            text=("Exit"),
+            font=("Helvetica", 10),
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=15,
+            height=2,
+            command=self.Quit,
+        )
+        a2.place(x=270, y=450)
+        self.win2.mainloop()
+
+    def RemoveAdministeredTest(self):
+        print("New Page")
+        self.win2 = tk.Toplevel()
+        self.win2.title("Remove Administered Test")
+        self.win2.geometry("500x500")
+        self.win2.resizable(0, 0)
+        self.win2.config(bg="gray97")
+        width_label = 18
+
+        cod_programare_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        cod_programare_insert_frame.grid(row=0, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            cod_programare_insert_frame,
+            text="Appointment Code ",
+            bg=cod_programare_insert_frame["bg"],
+            fg="#4380FA",
+            width=width_label,
+        ).grid(row=0, column=0)
+        self.cod_programare_insert = tk.Entry(cod_programare_insert_frame)
+        self.cod_programare_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        data_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        data_insert_frame.grid(row=1, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            data_insert_frame, text="Appointment Date ", bg=data_insert_frame["bg"], fg="#4380FA", width=width_label
+        ).grid(row=0, column=0)
+        self.data_prog_insert = tk.Entry(data_insert_frame)
+        self.data_prog_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        nume_pacient_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        nume_pacient_insert_frame.grid(row=2, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            nume_pacient_insert_frame,
+            text="Pacient Name ",
+            bg=nume_pacient_insert_frame["bg"],
+            fg="#4380FA",
+            width=width_label,
+        ).grid(row=0, column=0)
+        self.nume_pacient_insert = tk.Entry(nume_pacient_insert_frame)
+        self.nume_pacient_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        cnp_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        cnp_insert_frame.grid(row=3, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            cnp_insert_frame, text="Pacient CNP ", bg=cnp_insert_frame["bg"], fg="#4380FA", width=width_label
+        ).grid(row=0, column=0)
+        self.cnp_insert = tk.Entry(cnp_insert_frame)
+        self.cnp_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        tk.Button(
+            self.win2,
+            text="Remove",
+            font=("Helvetica", 10),
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=15,
+            height=2,
+            command=self.Quit,
+        ).place(x=80, y=450)
+        a2 = tk.Button(
+            self.win2,
+            text=("Exit"),
+            font=("Helvetica", 10),
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=15,
+            height=2,
+            command=self.Quit,
+        )
+        a2.place(x=270, y=450)
+        self.win2.mainloop()
+
+    def AddPayment(self):
+        print("New Page")
+        self.win2 = tk.Toplevel()
+        self.win2.title("Add Payment")
+        self.win2.geometry("500x500")
+        self.win2.resizable(0, 0)
+        self.win2.config(bg="gray97")
+        width_label = 18
+
+        cod_programare_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        cod_programare_insert_frame.grid(row=0, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            cod_programare_insert_frame,
+            text="Appointment Code ",
+            bg=cod_programare_insert_frame["bg"],
+            fg="#4380FA",
+            width=width_label,
+        ).grid(row=0, column=0)
+        self.cod_programare_insert = tk.Entry(cod_programare_insert_frame)
+        self.cod_programare_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        data_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        data_insert_frame.grid(row=1, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            data_insert_frame, text="Appointment Date ", bg=data_insert_frame["bg"], fg="#4380FA", width=width_label
+        ).grid(row=0, column=0)
+        self.data_prog_insert = tk.Entry(data_insert_frame)
+        self.data_prog_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        nume_pacient_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        nume_pacient_insert_frame.grid(row=2, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            nume_pacient_insert_frame,
+            text="Pacient Name ",
+            bg=nume_pacient_insert_frame["bg"],
+            fg="#4380FA",
+            width=width_label,
+        ).grid(row=0, column=0)
+        self.nume_pacient_insert = tk.Entry(nume_pacient_insert_frame)
+        self.nume_pacient_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        cnp_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        cnp_insert_frame.grid(row=3, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            cnp_insert_frame, text="Pacient CNP ", bg=cnp_insert_frame["bg"], fg="#4380FA", width=width_label
+        ).grid(row=0, column=0)
+        self.cnp_insert = tk.Entry(cnp_insert_frame)
+        self.cnp_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        tk.Button(
+            self.win2,
+            text="Insert",
+            font=("Helvetica", 10),
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=15,
+            height=2,
+            command=self.Quit,
+        ).place(x=80, y=450)
+        a2 = tk.Button(
+            self.win2,
+            text=("Exit"),
+            font=("Helvetica", 10),
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=15,
+            height=2,
+            command=self.Quit,
+        )
+        a2.place(x=270, y=450)
+        self.win2.mainloop()
+
+    def UpdatePayment(self):
+        print("New Page")
+        self.win2 = tk.Toplevel()
+        self.win2.title("Update Payment")
+        self.win2.geometry("500x500")
+        self.win2.resizable(0, 0)
+        self.win2.config(bg="gray97")
+        width_label = 18
+
+        cod_programare_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        cod_programare_insert_frame.grid(row=0, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            cod_programare_insert_frame,
+            text="Appointment Code ",
+            bg=cod_programare_insert_frame["bg"],
+            fg="#4380FA",
+            width=width_label,
+        ).grid(row=0, column=0)
+        self.cod_programare_insert = tk.Entry(cod_programare_insert_frame)
+        self.cod_programare_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        data_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        data_insert_frame.grid(row=1, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            data_insert_frame, text="Appointment Date ", bg=data_insert_frame["bg"], fg="#4380FA", width=width_label
+        ).grid(row=0, column=0)
+        self.data_prog_insert = tk.Entry(data_insert_frame)
+        self.data_prog_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        nume_pacient_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        nume_pacient_insert_frame.grid(row=2, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            nume_pacient_insert_frame,
+            text="Pacient Name ",
+            bg=nume_pacient_insert_frame["bg"],
+            fg="#4380FA",
+            width=width_label,
+        ).grid(row=0, column=0)
+        self.nume_pacient_insert = tk.Entry(nume_pacient_insert_frame)
+        self.nume_pacient_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        cnp_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        cnp_insert_frame.grid(row=3, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            cnp_insert_frame, text="Pacient CNP ", bg=cnp_insert_frame["bg"], fg="#4380FA", width=width_label
+        ).grid(row=0, column=0)
+        self.cnp_insert = tk.Entry(cnp_insert_frame)
+        self.cnp_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        tk.Button(
+            self.win2,
+            text="Update",
+            font=("Helvetica", 10),
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=15,
+            height=2,
+            command=self.Quit,
+        ).place(x=80, y=450)
+        a2 = tk.Button(
+            self.win2,
+            text=("Exit"),
+            font=("Helvetica", 10),
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=15,
+            height=2,
+            command=self.Quit,
+        )
+        a2.place(x=270, y=450)
+        self.win2.mainloop()
+
+    def RemovePayment(self):
+        print("New Page")
+        self.win2 = tk.Toplevel()
+        self.win2.title("Remove Payment")
+        self.win2.geometry("500x500")
+        self.win2.resizable(0, 0)
+        self.win2.config(bg="gray97")
+        width_label = 18
+
+        cod_programare_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        cod_programare_insert_frame.grid(row=0, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            cod_programare_insert_frame,
+            text="Appointment Code ",
+            bg=cod_programare_insert_frame["bg"],
+            fg="#4380FA",
+            width=width_label,
+        ).grid(row=0, column=0)
+        self.cod_programare_insert = tk.Entry(cod_programare_insert_frame)
+        self.cod_programare_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        data_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        data_insert_frame.grid(row=1, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            data_insert_frame, text="Appointment Date ", bg=data_insert_frame["bg"], fg="#4380FA", width=width_label
+        ).grid(row=0, column=0)
+        self.data_prog_insert = tk.Entry(data_insert_frame)
+        self.data_prog_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        nume_pacient_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        nume_pacient_insert_frame.grid(row=2, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            nume_pacient_insert_frame,
+            text="Pacient Name ",
+            bg=nume_pacient_insert_frame["bg"],
+            fg="#4380FA",
+            width=width_label,
+        ).grid(row=0, column=0)
+        self.nume_pacient_insert = tk.Entry(nume_pacient_insert_frame)
+        self.nume_pacient_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        cnp_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        cnp_insert_frame.grid(row=3, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            cnp_insert_frame, text="Pacient CNP ", bg=cnp_insert_frame["bg"], fg="#4380FA", width=width_label
+        ).grid(row=0, column=0)
+        self.cnp_insert = tk.Entry(cnp_insert_frame)
+        self.cnp_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        tk.Button(
+            self.win2,
+            text="Remove",
             font=("Helvetica", 10),
             bg="gray97",
             fg="#4380FA",

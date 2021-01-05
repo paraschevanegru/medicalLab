@@ -166,6 +166,8 @@ CREATE TABLE programari (
 )
 LOGGING;
 
+ALTER TABLE programari ADD CONSTRAINT programari_pk PRIMARY KEY ( id_programare );
+
 CREATE TABLE teste (
     id_test      NUMBER(6) NOT NULL,
     nume_test    VARCHAR2(40) NOT NULL,
