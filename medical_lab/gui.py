@@ -14,7 +14,7 @@ class GUI:
         self.window.wm_title("🏥 Medical Laboratory")
 
         self.container = tk.Frame(bg="gray97")
-        self.container.pack(side="top", fill="both", expand=True)
+        self.container.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
         self.container.grid_rowconfigure(0, weight=1)
         self.container.grid_columnconfigure(0, weight=1)
         db_conf = config["Database"]
@@ -28,7 +28,7 @@ class GUI:
             page_name = F.__name__
             frame = F(parent=self.container, controller=self)
             self.frames[page_name] = frame
-            frame.grid(row=0, column=0, sticky="nesw")
+            frame.grid(row=0, column=0, sticky=tk.NSEW)
         self.render_frame("LoginFrame")
 
     def recreate_frame(self):
@@ -39,7 +39,7 @@ class GUI:
             page_name = F.__name__
             frame = F(parent=self.container, controller=self)
             self.frames[page_name] = frame
-            frame.grid(row=0, column=0, sticky="nesw")
+            frame.grid(row=0, column=0, sticky=tk.NSEW)
         self.render_frame("LoginFrame")
 
     def render_frame(self, name):

@@ -12,7 +12,7 @@ class AsistentFrame(TitleFrame):
         self.init()
 
     def init(self):
-        self.bg_color = "blue"
+        self.bg_color = "gray97"
         self.btn_fg = "white"
         self.button_font = tkfont.Font(family="Helvetica", size=10)
 
@@ -20,20 +20,14 @@ class AsistentFrame(TitleFrame):
 
         main_frame = tk.Frame(master=self, bg=self.bg_color)
         main_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
-        main_frame.grid_rowconfigure(1, weight=1)
-        for r in range(12):
+        for r in range(10):
             main_frame.rowconfigure(r, weight=1)
-        for c in range(6):
+        for c in range(7):
             main_frame.columnconfigure(c, weight=1)
 
-        welcome_label_frame = tk.LabelFrame(main_frame, bg="red", bd=0)
-        welcome_label_frame.grid(column=1, row=0, columnspan=5, sticky="NSEW")
+        welcome_label_frame = tk.Frame(main_frame, bg="gray97", bd=0)
+        welcome_label_frame.grid(column=1, row=0, columnspan=6, rowspan=3, sticky=tk.NSEW)
 
-        query = list(map("".join, self.controller.get_columns_name("asistenti")))
-        self.table = TableFrame(main_frame, query)
-        self.table.grid(row=2, column=1, columnspan=6, rowspan=12, sticky="nsew")
-        # self.populate_the_table_with_all_values()
-        self.table.tree.bind("<<TreeviewSelect>>")
         self.init_dashboard(main_frame)
 
         tk.Label(
@@ -42,7 +36,7 @@ class AsistentFrame(TitleFrame):
             font=self.title_font,
             bg=self.bg_color,
             fg="#99CCFF",
-        ).grid(row=0, column=1, padx=10, pady=10)
+        ).grid(row=0, column=1, padx=5, pady=15)
         tk.Button(
             welcome_label_frame,
             text="Logout",
@@ -50,12 +44,28 @@ class AsistentFrame(TitleFrame):
             command=self.on_logout,
             bg="#4380FA",
             fg=self.btn_fg,
-        ).grid(row=0, column=2, padx=10, pady=10)
+        ).grid(row=0, column=2, padx=5, pady=15, sticky="e")
+
+        tk.Label(
+            welcome_label_frame,
+            text="Search",
+            bg=welcome_label_frame["bg"],
+            fg="#4380FA",
+            width=18,
+        ).grid(row=0, column=5)
+        self.search_button = tk.Entry(welcome_label_frame)
+        self.search_button.grid(row=0, column=6, pady=15, sticky="e")
+
+        query = list(map("".join, self.controller.get_columns_name("asistenti")))
+        self.table = TableFrame(main_frame, query)
+        self.table.grid(row=1, column=1, columnspan=6, rowspan=9, sticky=tk.NSEW)
+        # self.populate_the_table_with_all_values()
+        self.table.tree.bind("<<TreeviewSelect>>")
 
     def init_dashboard(self, parent):
 
-        self.dashboard_frame = tk.LabelFrame(parent, bg="green", bd=0)
-        self.dashboard_frame.grid(row=0, column=0, rowspan=12, sticky="nsew")
+        self.dashboard_frame = tk.Frame(parent, bg="gray97", bd=0)
+        self.dashboard_frame.grid(row=0, column=0, rowspan=10, sticky=tk.NSEW)
         # self.dashboard_frame.place(x=0, y=0, anchor="nw", width=225, height=650)
 
         tk.Label(
@@ -64,112 +74,106 @@ class AsistentFrame(TitleFrame):
             font=self.title_font,
             bg="gray97",
             fg="#99CCFF",
-        ).grid(row=0, column=0, padx=40, pady=10)
+        ).grid(row=0, column=0, padx=10, pady=15)
 
-        payment_button_frame = tk.LabelFrame(self.dashboard_frame, bg="gray97", bd=0)
-        payment_button_frame.grid(row=1, column=0, padx=40, pady=10)
         tk.Button(
-            payment_button_frame,
+            self.dashboard_frame,
             text="Add payment",
             font=self.button_font,
             bg="gray97",
             fg="#4380FA",
             relief="flat",
             width=20,
-            command=lambda: self.AddPayment(),
-        ).grid(row=1, column=0, padx=30, pady=5, sticky="w")
+            command=lambda: self.add_payment(),
+        ).grid(row=1, column=0, padx=30, pady=(30, 5))
 
         tk.Button(
-            payment_button_frame,
+            self.dashboard_frame,
             text="Remove payment",
             font=self.button_font,
             bg="gray97",
             fg="#4380FA",
             relief="flat",
             width=20,
-            command=lambda: self.RemovePayment(),
-        ).grid(row=2, column=0, padx=30, pady=5, sticky="w")
+            command=lambda: self.remove_payment(),
+        ).grid(row=2, column=0, padx=30, pady=5)
 
         tk.Button(
-            payment_button_frame,
+            self.dashboard_frame,
             text="Update payment",
             font=self.button_font,
             bg="gray97",
             fg="#4380FA",
             relief="flat",
             width=20,
-            command=lambda: self.UpdatePayment(),
-        ).grid(row=3, column=0, padx=30, pady=5, sticky="w")
+            command=lambda: self.update_payment(),
+        ).grid(row=3, column=0, padx=30, pady=5)
 
-        appointment_button_frame = tk.LabelFrame(self.dashboard_frame, bg="gray97", bd=0)
-        appointment_button_frame.grid(row=2, column=0, pady=10)
         tk.Button(
-            appointment_button_frame,
+            self.dashboard_frame,
             text="Add appointment",
             font=self.button_font,
             bg="gray97",
             fg="#4380FA",
             relief="flat",
             width=20,
-            command=lambda: self.AddAppointment(),
-        ).grid(row=4, column=0, padx=35, pady=5, sticky="w")
+            command=lambda: self.add_appointment(),
+        ).grid(row=4, column=0, padx=35, pady=(30, 5))
 
         tk.Button(
-            appointment_button_frame,
+            self.dashboard_frame,
             text="Remove appointment",
             font=self.button_font,
             bg="gray97",
             fg="#4380FA",
             relief="flat",
             width=20,
-            command=lambda: self.RemoveAppointment(),
-        ).grid(row=5, column=0, padx=35, pady=5, sticky="w")
+            command=lambda: self.remove_appointment(),
+        ).grid(row=5, column=0, padx=35, pady=5)
 
         tk.Button(
-            appointment_button_frame,
+            self.dashboard_frame,
             text="Update appointment",
             font=self.button_font,
             bg="gray97",
             fg="#4380FA",
             relief="flat",
             width=20,
-            command=lambda: self.UpdateAppointment(),
-        ).grid(row=6, column=0, padx=35, pady=5, sticky="w")
+            command=lambda: self.update_appointment(),
+        ).grid(row=6, column=0, padx=35, pady=5)
 
-        administeredtest_button_frame = tk.LabelFrame(self.dashboard_frame, bg="gray97", bd=0)
-        administeredtest_button_frame.grid(row=3, column=0, pady=10)
         tk.Button(
-            administeredtest_button_frame,
+            self.dashboard_frame,
             text="Add administered test",
             font=self.button_font,
             bg="gray97",
             fg="#4380FA",
             relief="flat",
             width=20,
-            command=lambda: self.AddAdministeredTest(),
-        ).grid(row=7, column=0, padx=35, pady=5, sticky="w")
+            command=lambda: self.add_administeredTest(),
+        ).grid(row=7, column=0, padx=35, pady=(30, 5))
 
         tk.Button(
-            administeredtest_button_frame,
+            self.dashboard_frame,
             text="Remove administered test",
             font=self.button_font,
             bg="gray97",
             fg="#4380FA",
             relief="flat",
             width=20,
-            command=lambda: self.RemoveAdministeredTest(),
-        ).grid(row=8, column=0, padx=35, pady=5, sticky="w")
+            command=lambda: self.remove_administeredTest(),
+        ).grid(row=8, column=0, padx=35, pady=5)
 
         tk.Button(
-            administeredtest_button_frame,
+            self.dashboard_frame,
             text="Update administered test",
             font=self.button_font,
             bg="gray97",
             fg="#4380FA",
             relief="flat",
             width=20,
-            command=lambda: self.UpdateAdministeredTest(),
-        ).grid(row=9, column=0, padx=35, pady=5, sticky="w")
+            command=lambda: self.update_administeredTest(),
+        ).grid(row=9, column=0, padx=35, pady=5)
 
     def on_logout(self):
         from tkinter import messagebox
@@ -177,7 +181,7 @@ class AsistentFrame(TitleFrame):
         if messagebox.askokcancel("Logout", "Are you sure you want to logout?"):
             self.controller.render_frame("LoginFrame")
 
-    def AddAppointment(self):
+    def add_appointment(self):
         print("New Page")
         self.win2 = tk.Toplevel()
         self.win2.title("Add Appointment")
@@ -185,18 +189,6 @@ class AsistentFrame(TitleFrame):
         self.win2.resizable(0, 0)
         self.win2.config(bg="gray97")
         width_label = 18
-
-        cod_programare_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        cod_programare_insert_frame.grid(row=0, column=0, pady=20, padx=80, sticky="w")
-        tk.Label(
-            cod_programare_insert_frame,
-            text="Appointment Code ",
-            bg=cod_programare_insert_frame["bg"],
-            fg="#4380FA",
-            width=width_label,
-        ).grid(row=0, column=0)
-        self.cod_programare_insert = tk.Entry(cod_programare_insert_frame)
-        self.cod_programare_insert.grid(row=0, column=1, padx=5, pady=10)
 
         data_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
         data_insert_frame.grid(row=1, column=0, pady=20, padx=80, sticky="w")
@@ -251,7 +243,7 @@ class AsistentFrame(TitleFrame):
         a2.place(x=270, y=450)
         self.win2.mainloop()
 
-    def UpdateAppointment(self):
+    def update_appointment(self):
         print("New Page")
         self.win2 = tk.Toplevel()
         self.win2.title("Update Appointment")
@@ -325,7 +317,7 @@ class AsistentFrame(TitleFrame):
         a2.place(x=270, y=450)
         self.win2.mainloop()
 
-    def RemoveAppointment(self):
+    def remove_appointment(self):
         print("New Page")
         self.win2 = tk.Toplevel()
         self.win2.title("Remove Appointment")
@@ -399,7 +391,7 @@ class AsistentFrame(TitleFrame):
         a2.place(x=270, y=450)
         self.win2.mainloop()
 
-    def AddAdministeredTest(self):
+    def add_administeredTest(self):
         print("New Page")
         self.win2 = tk.Toplevel()
         self.win2.title("Add Administered Test")
@@ -473,7 +465,7 @@ class AsistentFrame(TitleFrame):
         a2.place(x=270, y=450)
         self.win2.mainloop()
 
-    def UpdateAdministeredTest(self):
+    def update_administeredTest(self):
         print("New Page")
         self.win2 = tk.Toplevel()
         self.win2.title("Update Administered Test")
@@ -547,7 +539,7 @@ class AsistentFrame(TitleFrame):
         a2.place(x=270, y=450)
         self.win2.mainloop()
 
-    def RemoveAdministeredTest(self):
+    def remove_administeredTest(self):
         print("New Page")
         self.win2 = tk.Toplevel()
         self.win2.title("Remove Administered Test")
@@ -621,7 +613,7 @@ class AsistentFrame(TitleFrame):
         a2.place(x=270, y=450)
         self.win2.mainloop()
 
-    def AddPayment(self):
+    def add_payment(self):
         print("New Page")
         self.win2 = tk.Toplevel()
         self.win2.title("Add Payment")
@@ -695,7 +687,7 @@ class AsistentFrame(TitleFrame):
         a2.place(x=270, y=450)
         self.win2.mainloop()
 
-    def UpdatePayment(self):
+    def update_payment(self):
         print("New Page")
         self.win2 = tk.Toplevel()
         self.win2.title("Update Payment")
@@ -769,7 +761,7 @@ class AsistentFrame(TitleFrame):
         a2.place(x=270, y=450)
         self.win2.mainloop()
 
-    def RemovePayment(self):
+    def remove_payment(self):
         print("New Page")
         self.win2 = tk.Toplevel()
         self.win2.title("Remove Payment")
