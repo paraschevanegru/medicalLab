@@ -15,11 +15,6 @@ class TitleFrame(tk.Frame):
     def init_title(self):
         title_frame = tk.Frame(master=self, bg=self.parent["bg"])
         title_frame.pack(side=tk.TOP, fill=tk.X)
-        for r in range(6):
-            self.title_frame.rowconfigure(r, weight=1)
-        for c in range(5):
-            self.title_frame.columnconfigure(c, weight=1)
-
         logo = Image.open(Path(__file__).parent / "logo.png")
         logo = logo.resize((25, 25), Image.ANTIALIAS)
         render = ImageTk.PhotoImage(logo)

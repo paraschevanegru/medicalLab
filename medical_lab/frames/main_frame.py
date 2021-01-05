@@ -1,3 +1,4 @@
+from tkinter import messagebox
 from medical_lab.frames.table_frame import TableFrame
 import tkinter as tk
 from tkinter import font as tkfont, ttk
@@ -70,6 +71,7 @@ class MainFrame(TitleFrame):
             fg="#4380FA",
             relief="flat",
             width=20,
+            command=lambda: self.NewPage(),
         ).grid(row=1, column=0, padx=35, pady=15, sticky="w")
 
         tk.Button(
@@ -80,6 +82,7 @@ class MainFrame(TitleFrame):
             fg="#4380FA",
             relief="flat",
             width=20,
+            command=lambda: self.NewPage(),
         ).grid(row=2, column=0, padx=35, pady=15, sticky="w")
 
         tk.Button(
@@ -90,6 +93,7 @@ class MainFrame(TitleFrame):
             fg="#4380FA",
             relief="flat",
             width=20,
+            command=lambda: self.NewPage(),
         ).grid(row=3, column=0, padx=35, pady=15, sticky="w")
 
     def on_logout(self):
@@ -97,3 +101,29 @@ class MainFrame(TitleFrame):
 
         if messagebox.askokcancel("Logout", "Are you sure you want to logout?"):
             self.controller.render_frame("LoginFrame")
+
+    def NewPage(self):
+        print("New Page")
+        self.win2 = tk.Toplevel()
+        self.win2.title("Add payment")
+        self.win2.geometry("500x500")
+        self.win2.resizable(0, 0)
+        self.win2.config(bg="gray97")
+        a2 = tk.Button(
+            self.win2,
+            text=("Exit"),
+            font=("Helvetica", 10),
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=15,
+            height=2,
+            command=self.Quit,
+        )
+        a2.place(x=190, y=450)
+        self.win2.mainloop()
+
+    def Quit(self):
+        answer = messagebox.askokcancel("Quit", "      Are you sure?")
+        if answer:
+            self.win2.destroy()
