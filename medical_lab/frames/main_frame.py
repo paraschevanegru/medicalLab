@@ -1,3 +1,4 @@
+from medical_lab.frames.table_frame import TableFrame
 import tkinter as tk
 from tkinter import font as tkfont, ttk
 from tkinter.constants import NW
@@ -10,23 +11,86 @@ class MainFrame(TitleFrame):
         self.init()
 
     def init(self):
-        bg_color = "white"
-        btn_fg = "white"
-        button_font = tkfont.Font(family="Helvetica", size=10)
+        self.bg_color = "white"
+        self.btn_fg = "white"
+        self.button_font = tkfont.Font(family="Helvetica", size=10)
 
         self.main_frame_welcome_label_var = tk.StringVar()
 
-        main_frame = tk.Frame(master=self, bg=bg_color)
+        main_frame = tk.Frame(master=self, bg=self.bg_color)
         main_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
         main_frame.grid_rowconfigure(1, weight=1)
-        # main_frame.grid_columnconfigure(0, weight=0)
+        main_frame.grid_columnconfigure(0, weight=1)
         main_frame.grid_columnconfigure(1, weight=1)
+
+        welcome_label_frame = tk.LabelFrame(main_frame, bg="red", bd=0)
+        welcome_label_frame.grid(column=2, row=0, columnspan=2, ipadx=430, ipady=0, sticky="NSEW")
+
+        query = list(map("".join, self.controller.get_columns_name("asistenti")))
+        self.table = TableFrame(main_frame, query)
+        self.table.grid(row=1, column=1, sticky="nsew")
+        # self.populate_the_table_with_all_values()
+        self.table.tree.bind("<<TreeviewSelect>>")
+        self.init_dashboard(main_frame)
+
         tk.Label(
-            main_frame, textvariable=self.main_frame_welcome_label_var, font=self.title_font, bg=bg_color, fg="black"
-        ).grid(row=0, column=0, padx=35, pady=15, sticky="w")
-        tk.Button(main_frame, text="Logout", font=button_font, command=self.on_logout, bg="#4380FA", fg=btn_fg).grid(
-            row=0, column=2, padx=35, pady=15, sticky="w"
-        )
+            welcome_label_frame,
+            textvariable=self.main_frame_welcome_label_var,
+            font=self.title_font,
+            bg=self.bg_color,
+            fg="#99CCFF",
+        ).grid(row=0, column=2, padx=5, pady=10)
+        tk.Button(
+            welcome_label_frame,
+            text="Logout",
+            font=self.button_font,
+            command=self.on_logout,
+            bg="#4380FA",
+            fg=self.btn_fg,
+        ).grid(row=0, column=1, padx=10, pady=5, sticky="e")
+
+    def init_dashboard(self, parent):
+
+        self.dashboard_frame = tk.LabelFrame(parent, bg="gray97", bd=0)
+        self.dashboard_frame.grid(row=1, column=0, columnspan=1, sticky="w")
+        self.dashboard_frame.place(x=0, y=0, anchor="nw", width=225, height=650)
+
+        tk.Label(
+            self.dashboard_frame,
+            text="Dashboard",
+            font=self.title_font,
+            bg="gray97",
+            fg="#99CCFF",
+        ).grid(row=0, column=0, padx=35, pady=10)
+        tk.Button(
+            self.dashboard_frame,
+            text="Add payment",
+            font=self.button_font,
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=20,
+        ).grid(row=1, column=0, padx=35, pady=15, sticky="w")
+
+        tk.Button(
+            self.dashboard_frame,
+            text="Add appointment",
+            font=self.button_font,
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=20,
+        ).grid(row=2, column=0, padx=35, pady=15, sticky="w")
+
+        tk.Button(
+            self.dashboard_frame,
+            text="Add administered test",
+            font=self.button_font,
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=20,
+        ).grid(row=3, column=0, padx=35, pady=15, sticky="w")
 
     def on_logout(self):
         from tkinter import messagebox
