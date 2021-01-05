@@ -109,6 +109,51 @@ class MainFrame(TitleFrame):
         self.win2.geometry("500x500")
         self.win2.resizable(0, 0)
         self.win2.config(bg="gray97")
+        width_label = 7
+
+        shop_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        shop_insert_frame.grid(row=0, column=0, pady=15, padx=130, sticky="w")
+        tk.Label(shop_insert_frame, text="Shop: ", bg=shop_insert_frame["bg"], fg="#4380FA", width=width_label).grid(
+            row=0, column=0
+        )
+        self.shop_name_insert = tk.Entry(shop_insert_frame)
+        self.shop_name_insert.grid(row=0, column=1, padx=5, pady=5)
+
+        street_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        street_insert_frame.grid(row=1, column=0, pady=15, padx=130, sticky="w")
+        tk.Label(
+            street_insert_frame, text="Street: ", bg=street_insert_frame["bg"], fg="#4380FA", width=width_label
+        ).grid(row=0, column=0)
+        self.street_name_insert = tk.Entry(street_insert_frame)
+        self.street_name_insert.grid(row=0, column=1, padx=5, pady=5)
+
+        city_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        city_insert_frame.grid(row=2, column=0, pady=15, padx=130, sticky="w")
+        tk.Label(city_insert_frame, text="City: ", bg=city_insert_frame["bg"], fg="#4380FA", width=width_label).grid(
+            row=0, column=0
+        )
+        self.city_name_insert = tk.Entry(city_insert_frame)
+        self.city_name_insert.grid(row=0, column=1, padx=5, pady=5)
+
+        country_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        country_insert_frame.grid(row=3, column=0, pady=15, padx=130, sticky="w")
+        tk.Label(
+            country_insert_frame, text="Country: ", bg=country_insert_frame["bg"], fg="#4380FA", width=width_label
+        ).grid(row=0, column=0)
+        self.country_name_insert = tk.Entry(country_insert_frame)
+        self.country_name_insert.grid(row=0, column=1, padx=5, pady=5)
+
+        tk.Button(
+            self.win2,
+            text="Insert",
+            font=("Helvetica", 10),
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=15,
+            height=2,
+            command=self.Quit,
+        ).place(x=80, y=450)
         a2 = tk.Button(
             self.win2,
             text=("Exit"),
@@ -120,7 +165,7 @@ class MainFrame(TitleFrame):
             height=2,
             command=self.Quit,
         )
-        a2.place(x=190, y=450)
+        a2.place(x=270, y=450)
         self.win2.mainloop()
 
     def Quit(self):
