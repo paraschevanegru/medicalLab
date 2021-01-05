@@ -70,8 +70,8 @@ class LoginFrame(TitleFrame):
                 print("ziua")
                 # self.controller.set_state(self.controller.frames["AsistentFrame"].dashboard_frame)
                 # self.controller.set_state(self.controller.render_frame("AsistentFrame"))
-                self.controller.frames["MainFrame"].main_frame_welcome_label_var.set(f"Welcome {user_name}")
-                self.controller.render_frame("MainFrame")
+                self.controller.frames["AsistentFrame"].main_frame_welcome_label_var.set(f"Welcome {user_name}")
+                self.controller.render_frame("AsistentFrame")
 
     def on_login(self):
         query = ""
