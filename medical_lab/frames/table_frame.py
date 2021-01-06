@@ -13,7 +13,7 @@ class TableFrame(tk.Frame):
         self.init(tree_columns)
 
     def init(self, tree_columns):
-        font = tkfont.Font(family="Helvetica", size=12, weight="bold")
+        font = tkfont.Font(family="Helvetica", size=10)
         self.tree = ttk.Treeview(master=self, columns=tree_columns, show="headings", selectmode="extended")
         vsb = ttk.Scrollbar(self, orient="vertical", command=self.tree.yview)
         hsb = ttk.Scrollbar(self, orient="horizontal", command=self.tree.xview)
@@ -24,8 +24,15 @@ class TableFrame(tk.Frame):
         self.tree.tag_configure("oddrow", font=font)
         self.tree.tag_configure("evenrow", font=font)
         for col in tree_columns:
-            self.tree.heading(col, text=col, anchor="w", command=lambda c=col: self.sort_by(self.tree, c, 0))
-            self.tree.column(col, width=tkfont.Font().measure(col.title()), minwidth=50, stretch=True)
+            self.tree.heading(
+                col, text=col.title().replace("_", " "), anchor="w", command=lambda c=col: self.sort_by(self.tree, c, 0)
+            )
+            self.tree.column(
+                col,
+                # width=tkfont.Font().measure(col.title()),
+                width=50,
+                minwidth=20,
+            )
 
         self.fix_treeview_color()
 
@@ -41,10 +48,10 @@ class TableFrame(tk.Frame):
             # should be future-safe.
             return [elm for elm in style.map("Treeview", query_opt=option) if elm[:2] != ("!disabled", "!selected")]
 
-        font = tkfont.Font(family="Helvetica", size=10, weight="bold")
+        font = tkfont.Font(family="Helvetica", size=10)
         style = ttk.Style()
         style.map("Treeview", foreground=fixed_map("foreground"), background=fixed_map("background"))
-        style.configure("Treeview.Heading", foreground="green", font=font)
+        style.configure("Treeview.Heading", foreground="#4380FA", font=font)
 
     def is_float(self, element):
         try:

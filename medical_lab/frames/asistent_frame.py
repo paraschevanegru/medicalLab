@@ -2,7 +2,7 @@ from tkinter import messagebox
 from medical_lab.frames.table_frame import TableFrame
 import tkinter as tk
 from tkinter import font as tkfont, ttk
-from tkinter.constants import NW
+from tkinter.constants import NONE, NW
 from .base_frame import TitleFrame
 
 
@@ -52,15 +52,12 @@ class AsistentFrame(TitleFrame):
             bg=welcome_label_frame["bg"],
             fg="#4380FA",
             width=18,
-        ).grid(row=0, column=5)
+        ).grid(row=0, column=5, padx=5, pady=10)
         self.search_button = tk.Entry(welcome_label_frame)
-        self.search_button.grid(row=0, column=6, pady=15, sticky="e")
-
-        query = list(map("".join, self.controller.get_columns_name("asistenti")))
-        self.table = TableFrame(main_frame, query)
-        self.table.grid(row=1, column=1, columnspan=6, rowspan=9, sticky=tk.NSEW)
-        # self.populate_the_table_with_all_values()
-        self.table.tree.bind("<<TreeviewSelect>>")
+        self.search_button.grid(row=0, column=6, padx=5, pady=10)
+        self.base_frame = main_frame
+        self.table = None
+        self.populate_table_appointments()
 
     def init_dashboard(self, parent):
 
@@ -78,6 +75,16 @@ class AsistentFrame(TitleFrame):
 
         tk.Button(
             self.dashboard_frame,
+            text="View payments",
+            font=self.button_font,
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=20,
+            command=lambda: self.populate_table_payments(),
+        ).grid(row=1, column=0, padx=30, pady=(5, 5))
+        tk.Button(
+            self.dashboard_frame,
             text="Add payment",
             font=self.button_font,
             bg="gray97",
@@ -85,7 +92,7 @@ class AsistentFrame(TitleFrame):
             relief="flat",
             width=20,
             command=lambda: self.add_payment(),
-        ).grid(row=1, column=0, padx=30, pady=(30, 5))
+        ).grid(row=2, column=0, padx=30)
 
         tk.Button(
             self.dashboard_frame,
@@ -96,7 +103,7 @@ class AsistentFrame(TitleFrame):
             relief="flat",
             width=20,
             command=lambda: self.remove_payment(),
-        ).grid(row=2, column=0, padx=30, pady=5)
+        ).grid(row=3, column=0, padx=30, pady=5)
 
         tk.Button(
             self.dashboard_frame,
@@ -107,7 +114,18 @@ class AsistentFrame(TitleFrame):
             relief="flat",
             width=20,
             command=lambda: self.update_payment(),
-        ).grid(row=3, column=0, padx=30, pady=5)
+        ).grid(row=4, column=0, padx=30, pady=5)
+
+        tk.Button(
+            self.dashboard_frame,
+            text="View appointments",
+            font=self.button_font,
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=20,
+            command=lambda: self.populate_table_appointments(),
+        ).grid(row=5, column=0, padx=35, pady=(30, 5))
 
         tk.Button(
             self.dashboard_frame,
@@ -118,7 +136,7 @@ class AsistentFrame(TitleFrame):
             relief="flat",
             width=20,
             command=lambda: self.add_appointment(),
-        ).grid(row=4, column=0, padx=35, pady=(30, 5))
+        ).grid(row=6, column=0, padx=35, pady=5)
 
         tk.Button(
             self.dashboard_frame,
@@ -129,7 +147,7 @@ class AsistentFrame(TitleFrame):
             relief="flat",
             width=20,
             command=lambda: self.remove_appointment(),
-        ).grid(row=5, column=0, padx=35, pady=5)
+        ).grid(row=7, column=0, padx=35, pady=5)
 
         tk.Button(
             self.dashboard_frame,
@@ -140,8 +158,18 @@ class AsistentFrame(TitleFrame):
             relief="flat",
             width=20,
             command=lambda: self.update_appointment(),
-        ).grid(row=6, column=0, padx=35, pady=5)
+        ).grid(row=8, column=0, padx=35, pady=5)
 
+        tk.Button(
+            self.dashboard_frame,
+            text="View administered tests",
+            font=self.button_font,
+            bg="gray97",
+            fg="#4380FA",
+            relief="flat",
+            width=20,
+            command=lambda: self.populate_table_administrated_tests(),
+        ).grid(row=9, column=0, padx=35, pady=(30, 5))
         tk.Button(
             self.dashboard_frame,
             text="Add administered test",
@@ -151,7 +179,7 @@ class AsistentFrame(TitleFrame):
             relief="flat",
             width=20,
             command=lambda: self.add_administeredTest(),
-        ).grid(row=7, column=0, padx=35, pady=(30, 5))
+        ).grid(row=10, column=0, padx=35, pady=5)
 
         tk.Button(
             self.dashboard_frame,
@@ -162,7 +190,7 @@ class AsistentFrame(TitleFrame):
             relief="flat",
             width=20,
             command=lambda: self.remove_administeredTest(),
-        ).grid(row=8, column=0, padx=35, pady=5)
+        ).grid(row=11, column=0, padx=35, pady=5)
 
         tk.Button(
             self.dashboard_frame,
@@ -173,7 +201,7 @@ class AsistentFrame(TitleFrame):
             relief="flat",
             width=20,
             command=lambda: self.update_administeredTest(),
-        ).grid(row=9, column=0, padx=35, pady=5)
+        ).grid(row=12, column=0, padx=35, pady=5)
 
     def on_logout(self):
         from tkinter import messagebox
@@ -839,3 +867,64 @@ class AsistentFrame(TitleFrame):
         answer = messagebox.askokcancel("Quit", "      Are you sure?")
         if answer:
             self.win2.destroy()
+
+    def populate_table_appointments(self):
+        if self.table:
+            self.table.clear_table()
+            self.table.destroy()
+        query = list(map("".join, self.controller.get_columns_name("programari")))[:3]
+        query.extend(list(map("".join, self.controller.get_columns_name("asistenti")))[1:2])
+        query.extend(list(map("".join, self.controller.get_columns_name("pacienti")))[1:3])
+        self.table = TableFrame(self.base_frame, query)
+        self.table.grid(row=1, column=1, columnspan=6, rowspan=9, sticky=tk.NSEW)
+        self.table.tree.bind("<<TreeviewSelect>>")
+        query_select = self.controller.run_query(
+            """select id_programare, cod_programare, data_programare, cod_asistent, nume_pacient,cnp 
+               from programari p, asistenti a, pacienti pa 
+               where p.id_pacient=pa.id_pacient and a.id_asistent=p.id_asistent"""
+        )
+        for row in query_select:
+            self.table.insert("", "end", values=row)
+
+    def populate_table_payments(self):
+        if self.table:
+            self.table.clear_table()
+            self.table.destroy()
+        query = list(map("".join, self.controller.get_columns_name("plati")))[:4]
+        query.extend(list(map("".join, self.controller.get_columns_name("pacienti")))[1:3])
+
+        self.table = TableFrame(self.base_frame, query)
+        self.table.grid(row=1, column=1, columnspan=6, rowspan=9, sticky=tk.NSEW)
+        self.table.tree.bind("<<TreeviewSelect>>")
+        query_select = self.controller.run_query(
+            """select id_plata, data_plata, total_plata,moneda, nume_pacient,cnp 
+               from plati p, pacienti pa 
+               where p.id_pacient=pa.id_pacient"""
+        )
+        for row in query_select:
+            self.table.insert("", "end", values=row)
+
+    def populate_table_administrated_tests(self):
+        if self.table:
+            self.table.clear_table()
+            self.table.destroy()
+        query = list(map("".join, self.controller.get_columns_name("teste_efectuate")))[:1]
+        query.extend(list(map("".join, self.controller.get_columns_name("tipuri_teste")))[1:2])
+        query.extend(list(map("".join, self.controller.get_columns_name("teste")))[1:3])
+        query.extend(list(map("".join, self.controller.get_columns_name("teste_efectuate")))[1:2])
+        query.extend(list(map("".join, self.controller.get_columns_name("asistenti")))[1:2])
+        query.extend(list(map("".join, self.controller.get_columns_name("pacienti")))[1:3])
+
+        self.table = TableFrame(self.base_frame, query)
+        self.table.grid(row=1, column=1, columnspan=6, rowspan=9, sticky=tk.NSEW)
+        self.table.tree.bind("<<TreeviewSelect>>")
+        query_select = self.controller.run_query(
+            """select id_test_efectuat,denumire_tip_test, nume_test, pret_test,data_recoltare, cod_asistent, nume_pacient,cnp 
+                from teste_efectuate e, teste t, tipuri_teste ti, asistenti a, pacienti p 
+                where p.id_pacient=e.id_pacient 
+                and a.id_asistent=e.id_asistent 
+                and t.id_test=e.id_test 
+                and t.id_tip_test=ti.id_tip_test"""
+        )
+        for row in query_select:
+            self.table.insert("", "end", values=row)
