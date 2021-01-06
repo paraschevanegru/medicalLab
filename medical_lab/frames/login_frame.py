@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import font as tkfont, ttk
-from typing import Coroutine
 from .base_frame import TitleFrame
 
 
@@ -16,7 +15,7 @@ class LoginFrame(TitleFrame):
         text_font = tkfont.Font(family="Helvetica", size=13)
         button_font = tkfont.Font(family="Helvetica", size=10)
 
-        login_frame = tk.Frame(master=self, bg="gray97")
+        login_frame = tk.Frame(master=self, bg="white")
         login_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
         login_frame.grid_rowconfigure(0, weight=1)
         login_frame.grid_columnconfigure(0, weight=1)
@@ -60,7 +59,7 @@ class LoginFrame(TitleFrame):
         label = "employee id" if value in ["asistent", "laborant"] else "cnp pacient"
         self._id_label.set(label)
 
-    def set_states(self, user_level):
+    def set_states(self, user_level, user_name):
         if user_level == "pacient":
             return
         else:
@@ -69,6 +68,10 @@ class LoginFrame(TitleFrame):
                 print("buna")
             if user_level == "asistent":
                 print("ziua")
+                # self.controller.set_state(self.controller.frames["AsistentFrame"].dashboard_frame)
+                # self.controller.set_state(self.controller.render_frame("AsistentFrame"))
+                self.controller.frames["AsistentFrame"].main_frame_welcome_label_var.set(f"Welcome {user_name}")
+                self.controller.render_frame("AsistentFrame")
 
     def on_login(self):
         query = ""
@@ -88,10 +91,8 @@ class LoginFrame(TitleFrame):
             self.controller.user_info["email"] = user_info[2]
 
             self.controller.recreate_frame()
-            self.set_states(account)
+            self.set_states(account, user_info[1])
 
-            self.controller.frames["MainFrame"].main_frame_welcome_label_var.set(f"Welcome {user_info[1]}")
-            self.controller.render_frame("MainFrame")
         else:
             from tkinter import messagebox
 
