@@ -4,6 +4,8 @@ import tkinter as tk
 from tkinter import font as tkfont, ttk
 from tkinter.constants import NONE, NW
 from .base_frame import TitleFrame
+from tkcalendar import Calendar
+from datetime import datetime
 
 
 class AsistentFrame(TitleFrame):
@@ -17,6 +19,7 @@ class AsistentFrame(TitleFrame):
         self.button_font = tkfont.Font(family="Helvetica", size=10)
 
         self.main_frame_welcome_label_var = tk.StringVar()
+        self.employee_code = tk.StringVar()
 
         main_frame = tk.Frame(master=self, bg=self.bg_color)
         main_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
@@ -210,33 +213,43 @@ class AsistentFrame(TitleFrame):
             self.controller.render_frame("LoginFrame")
 
     def add_appointment(self):
-        print("New Page")
         self.win2 = tk.Toplevel()
         self.win2.title("Add Appointment")
         self.win2.geometry("500x500")
         self.win2.resizable(0, 0)
         self.win2.config(bg="gray97")
         width_label = 18
+        cod_programare_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
+        cod_programare_insert_frame.grid(row=0, column=0, pady=20, padx=80, sticky="w")
+        tk.Label(
+            cod_programare_insert_frame,
+            text="Appointment Code ",
+            bg=cod_programare_insert_frame["bg"],
+            fg="#4380FA",
+            width=width_label,
+        ).grid(row=0, column=0)
+        self.cod_programare_insert = tk.Entry(cod_programare_insert_frame)
+        self.cod_programare_insert.grid(row=0, column=1, padx=5, pady=10)
 
         data_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
         data_insert_frame.grid(row=1, column=0, pady=20, padx=80, sticky="w")
         tk.Label(
             data_insert_frame, text="Appointment Date ", bg=data_insert_frame["bg"], fg="#4380FA", width=width_label
         ).grid(row=0, column=0)
-        self.data_prog_insert = tk.Entry(data_insert_frame)
-        self.data_prog_insert.grid(row=0, column=1, padx=5, pady=10)
-
-        nume_pacient_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        nume_pacient_insert_frame.grid(row=2, column=0, pady=20, padx=80, sticky="w")
-        tk.Label(
-            nume_pacient_insert_frame,
-            text="Pacient Name ",
-            bg=nume_pacient_insert_frame["bg"],
-            fg="#4380FA",
-            width=width_label,
-        ).grid(row=0, column=0)
-        self.nume_pacient_insert = tk.Entry(nume_pacient_insert_frame)
-        self.nume_pacient_insert.grid(row=0, column=1, padx=5, pady=10)
+        now = datetime.now()
+        self.data_prog_insert = Calendar(
+            self.win2,
+            font="Helvetica",
+            selectmode="day",
+            locale="en_US",
+            cursor="hand1",
+            year=now.year,
+            month=now.month,
+            day=now.day,
+            mindate=now,
+            date_pattern="dd.mm.y",
+        )
+        self.data_prog_insert.grid(row=2, column=0, pady=20, padx=80, sticky="w")
 
         cnp_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
         cnp_insert_frame.grid(row=3, column=0, pady=20, padx=80, sticky="w")
@@ -255,7 +268,7 @@ class AsistentFrame(TitleFrame):
             relief="flat",
             width=15,
             height=2,
-            command=self.Quit,
+            command=lambda: self.insert_appointment(),
         ).place(x=80, y=450)
         a2 = tk.Button(
             self.win2,
@@ -272,7 +285,7 @@ class AsistentFrame(TitleFrame):
         self.win2.mainloop()
 
     def update_appointment(self):
-        print("New Page")
+
         self.win2 = tk.Toplevel()
         self.win2.title("Update Appointment")
         self.win2.geometry("500x500")
@@ -346,7 +359,7 @@ class AsistentFrame(TitleFrame):
         self.win2.mainloop()
 
     def remove_appointment(self):
-        print("New Page")
+
         self.win2 = tk.Toplevel()
         self.win2.title("Remove Appointment")
         self.win2.geometry("500x500")
@@ -420,7 +433,7 @@ class AsistentFrame(TitleFrame):
         self.win2.mainloop()
 
     def add_administeredTest(self):
-        print("New Page")
+
         self.win2 = tk.Toplevel()
         self.win2.title("Add Administered Test")
         self.win2.geometry("500x500")
@@ -494,7 +507,7 @@ class AsistentFrame(TitleFrame):
         self.win2.mainloop()
 
     def update_administeredTest(self):
-        print("New Page")
+
         self.win2 = tk.Toplevel()
         self.win2.title("Update Administered Test")
         self.win2.geometry("500x500")
@@ -568,7 +581,7 @@ class AsistentFrame(TitleFrame):
         self.win2.mainloop()
 
     def remove_administeredTest(self):
-        print("New Page")
+
         self.win2 = tk.Toplevel()
         self.win2.title("Remove Administered Test")
         self.win2.geometry("500x500")
@@ -642,7 +655,7 @@ class AsistentFrame(TitleFrame):
         self.win2.mainloop()
 
     def add_payment(self):
-        print("New Page")
+
         self.win2 = tk.Toplevel()
         self.win2.title("Add Payment")
         self.win2.geometry("500x500")
@@ -716,7 +729,7 @@ class AsistentFrame(TitleFrame):
         self.win2.mainloop()
 
     def update_payment(self):
-        print("New Page")
+
         self.win2 = tk.Toplevel()
         self.win2.title("Update Payment")
         self.win2.geometry("500x500")
@@ -790,7 +803,7 @@ class AsistentFrame(TitleFrame):
         self.win2.mainloop()
 
     def remove_payment(self):
-        print("New Page")
+
         self.win2 = tk.Toplevel()
         self.win2.title("Remove Payment")
         self.win2.geometry("500x500")
@@ -886,14 +899,38 @@ class AsistentFrame(TitleFrame):
         for row in query_select:
             self.table.insert("", "end", values=row)
 
+    def _return_id(self, table, id_suffix, filter_value, value):
+        if not value:
+            return
+        query_select = f"SELECT id_{id_suffix} FROM {table} WHERE {filter_value} = {value}"
+        result = self.controller.run_query(query_select)
+        if len(result) > 1:
+            print("nunu")
+        else:
+            return result[0][0]
+
+    def insert_appointment(self):
+        if not self.cod_programare_insert:
+            return
+        if not self.data_prog_insert:
+            return
+        if not self.cnp_insert:
+            return
+        id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_insert.get())
+        id_asistent = self._return_id("asistenti", "asistent", "cod_asistent", self.employee_code.get())
+        query_appointment = f"INSERT INTO programari VALUES (NULL, {self.cod_programare_insert.get()}, TO_DATE('{self.data_prog_insert.get_date()}', 'DD.MM.YYYY'), {id_pacient}, {id_asistent})"
+
+        self.controller.run_query(query_appointment)
+        self.populate_table_appointments()
+
     def populate_table_payments(self):
         if self.table:
             self.table.clear_table()
             self.table.destroy()
-        query = list(map("".join, self.controller.get_columns_name("plati")))[:4]
-        query.extend(list(map("".join, self.controller.get_columns_name("pacienti")))[1:3])
+        query_view = list(map("".join, self.controller.get_columns_name("plati")))[:4]
+        query_view.extend(list(map("".join, self.controller.get_columns_name("pacienti")))[1:3])
 
-        self.table = TableFrame(self.base_frame, query)
+        self.table = TableFrame(self.base_frame, query_view)
         self.table.grid(row=1, column=1, columnspan=6, rowspan=9, sticky=tk.NSEW)
         self.table.tree.bind("<<TreeviewSelect>>")
         query_select = self.controller.run_query(

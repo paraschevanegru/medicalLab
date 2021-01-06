@@ -59,23 +59,17 @@ class LoginFrame(TitleFrame):
         label = "employee id" if value in ["asistent", "laborant"] else "cnp pacient"
         self._id_label.set(label)
 
-    def set_states(self, user_level, user_name):
+    def set_states(self, user_level, user_name, employee_code):
         if user_level == "pacient":
-            print("Pacient")
             self.controller.frames["PacientFrame"].main_frame_welcome_label_var.set(f"Welcome {user_name}")
             self.controller.render_frame("PacientFrame")
-            return
         else:
-            print("hey")
             if user_level == "laborant":
-                print("buna")
                 self.controller.frames["LaborantFrame"].main_frame_welcome_label_var.set(f"Welcome {user_name}")
                 self.controller.render_frame("LaborantFrame")
             if user_level == "asistent":
-                print("ziua")
-                # self.controller.set_state(self.controller.frames["AsistentFrame"].dashboard_frame)
-                # self.controller.set_state(self.controller.render_frame("AsistentFrame"))
                 self.controller.frames["AsistentFrame"].main_frame_welcome_label_var.set(f"Welcome {user_name}")
+                self.controller.frames["AsistentFrame"].employee_code.set(employee_code)
                 self.controller.render_frame("AsistentFrame")
 
     def on_login(self):
@@ -96,7 +90,7 @@ class LoginFrame(TitleFrame):
             self.controller.user_info["email"] = user_info[2]
 
             self.controller.recreate_frame()
-            self.set_states(account, user_info[1])
+            self.set_states(account, user_info[1], code)
 
         else:
             from tkinter import messagebox
