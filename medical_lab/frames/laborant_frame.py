@@ -85,7 +85,7 @@ class LaborantFrame(TitleFrame):
             relief="flat",
             width=20,
             command=lambda: self.add_testBulletin(),
-        ).grid(row=1, column=0, padx=30, pady=(30, 5))        
+        ).grid(row=1, column=0, padx=30, pady=(30, 5))
         tk.Button(
             self.dashboard_frame,
             text="Add test bulletin",
@@ -127,7 +127,7 @@ class LaborantFrame(TitleFrame):
             relief="flat",
             width=20,
             command=lambda: self.NewPage("View administrated tests"),
-        ).grid(row=5, column=0, padx=30, pady=(30, 5))    
+        ).grid(row=5, column=0, padx=30, pady=(30, 5))
         tk.Button(
             self.dashboard_frame,
             text="Add administrated test",
@@ -161,8 +161,6 @@ class LaborantFrame(TitleFrame):
             command=lambda: self.update_administratedtest(),
         ).grid(row=8, column=0, padx=35, pady=5)
 
-
-
     def on_logout(self):
         from tkinter import messagebox
 
@@ -170,7 +168,7 @@ class LaborantFrame(TitleFrame):
             self.controller.render_frame("LoginFrame")
 
     def add_administratedtest(self):
-        print("New Page")
+
         self.win2 = tk.Toplevel()
         self.win2.title("Add Administrated test")
         self.win2.geometry("500x500")
@@ -232,7 +230,7 @@ class LaborantFrame(TitleFrame):
         self.win2.mainloop()
 
     def update_administratedtest(self):
-        print("New Page")
+
         self.win2 = tk.Toplevel()
         self.win2.title("Update Administrated Test")
         self.win2.geometry("500x500")
@@ -306,7 +304,7 @@ class LaborantFrame(TitleFrame):
         self.win2.mainloop()
 
     def remove_administratedtest(self):
-        print("New Page")
+
         self.win2 = tk.Toplevel()
         self.win2.title("Remove Administrated Test")
         self.win2.geometry("500x500")
@@ -379,10 +377,8 @@ class LaborantFrame(TitleFrame):
         a2.place(x=270, y=450)
         self.win2.mainloop()
 
-
-
     def add_testBulletin(self):
-        print("New Page")
+
         self.win2 = tk.Toplevel()
         self.win2.title("Add Test Bulletin")
         self.win2.geometry("500x500")
@@ -456,7 +452,7 @@ class LaborantFrame(TitleFrame):
         self.win2.mainloop()
 
     def update_testBulletin(self):
-        print("New Page")
+
         self.win2 = tk.Toplevel()
         self.win2.title("Update Test Bulletin")
         self.win2.geometry("500x500")
@@ -530,7 +526,7 @@ class LaborantFrame(TitleFrame):
         self.win2.mainloop()
 
     def remove_testBulletin(self):
-        print("New Page")
+
         self.win2 = tk.Toplevel()
         self.win2.title("Remove Bulletin Test")
         self.win2.geometry("500x500")
