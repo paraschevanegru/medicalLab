@@ -1,6 +1,7 @@
 import tkinter as tk
-from tkinter import font as tkfont, ttk
+from tkinter import font as tkfont
 from .base_frame import TitleFrame
+from tkinter import messagebox
 
 
 class LoginFrame(TitleFrame):
@@ -76,23 +77,24 @@ class LoginFrame(TitleFrame):
         query = ""
         account = self.variable.get()
         code = self.employee_id_entry.get()
-        if account == "asistent":
-            query = f"select a.id_asistent, a.nume_asistent, a.email from asistenti a where a.cod_asistent='{code}'"
-        elif account == "laborant":
-            query = f"select l.id_laborant, l.nume_laborant, l.email from laboranti l where l.cod_laborant='{code}'"
-        elif account == "pacient":
-            query = f"select p.id_pacient, p.nume_pacient, p.email from pacienti p where p.cnp='{code}'"
-
-        user_info = [item for t in self.controller.run_query(query) for item in t]
-        if user_info:
-            self.controller.user_info["user_id"] = user_info[0]
-            self.controller.user_info["name"] = user_info[1]
-            self.controller.user_info["email"] = user_info[2]
-
-            self.controller.recreate_frame()
-            self.set_states(account, user_info[1], code)
-
-        else:
-            from tkinter import messagebox
-
+        if code == "0":
             messagebox.showinfo("Login Failed", "Wrong id")
+        else:
+            if account == "asistent":
+                query = f"select a.id_asistent, a.nume_asistent, a.email from asistenti a where a.cod_asistent='{code}'"
+            elif account == "laborant":
+                query = f"select l.id_laborant, l.nume_laborant, l.email from laboranti l where l.cod_laborant='{code}'"
+            elif account == "pacient":
+                query = f"select p.id_pacient, p.nume_pacient, p.email from pacienti p where p.cnp='{code}'"
+
+            user_info = [item for t in self.controller.run_query(query) for item in t]
+            if user_info:
+                self.controller.user_info["user_id"] = user_info[0]
+                self.controller.user_info["name"] = user_info[1]
+                self.controller.user_info["email"] = user_info[2]
+
+                self.controller.recreate_frame()
+                self.set_states(account, user_info[1], code)
+
+            else:
+                messagebox.showinfo("Login Failed", "Wrong id")

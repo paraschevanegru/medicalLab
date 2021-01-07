@@ -439,46 +439,49 @@ class AsistentFrame(TitleFrame):
         self.win2.geometry("500x500")
         self.win2.resizable(0, 0)
         self.win2.config(bg="gray97")
-        width_label = 18
-
-        tip_test_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        tip_test_insert_frame.grid(row=0, column=0, pady=20, padx=80, sticky="w")
-        tk.Label(
-            tip_test_insert_frame,
-            text="Test Type ",
-            bg=tip_test_insert_frame["bg"],
-            fg="#4380FA",
-            width=width_label,
-        ).grid(row=0, column=0)
-        self.tip_test_insert = tk.Entry(tip_test_insert_frame)
-        self.tip_test_insert.grid(row=0, column=1, padx=5, pady=10)
+        width_label = 15
 
         nume_test_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        nume_test_insert_frame.grid(row=0, column=0, pady=20, padx=80, sticky="w")
+        nume_test_insert_frame.grid(row=1, column=0, pady=15, padx=80, sticky="w")
         tk.Label(
             nume_test_insert_frame,
-            text="Test Name ",
+            text="Choose the administered test ",
             bg=nume_test_insert_frame["bg"],
             fg="#4380FA",
-            width=width_label,
+            width=30,
         ).grid(row=0, column=0)
-        self.nume_test_insert = tk.Entry(nume_test_insert_frame)
-        self.nume_test_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        self.nume_test_insert = ttk.Combobox(self.win2, values=self._get_tests())
+        self.nume_test_insert.grid(column=0, row=2)
+        self.nume_test_insert.current(1)
 
         data_recoltare_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        data_recoltare_insert_frame.grid(row=1, column=0, pady=20, padx=80, sticky="w")
+        data_recoltare_insert_frame.grid(row=3, column=0, pady=5, padx=80, sticky="w")
         tk.Label(
             data_recoltare_insert_frame,
             text="Date Collecting Blood Sample",
             bg=data_recoltare_insert_frame["bg"],
             fg="#4380FA",
-            width=width_label,
+            width=25,
         ).grid(row=0, column=0)
-        self.data_recoltare_insert = tk.Entry(data_recoltare_insert_frame)
-        self.data_recoltare_insert.grid(row=0, column=1, padx=5, pady=10)
+        now = datetime.now()
+        self.data_recoltare_insert = Calendar(
+            self.win2,
+            font="Helvetica",
+            selectmode="day",
+            locale="en_US",
+            cursor="hand1",
+            year=now.year,
+            month=now.month,
+            day=now.day,
+            mindate=now,
+            maxdate=now,
+            date_pattern="dd.mm.y",
+        )
+        self.data_recoltare_insert.grid(row=4, column=0, padx=5, pady=10)
 
         cnp_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        cnp_insert_frame.grid(row=3, column=0, pady=20, padx=80, sticky="w")
+        cnp_insert_frame.grid(row=5, column=0, pady=5, padx=80, sticky="w")
         tk.Label(
             cnp_insert_frame, text="Pacient CNP ", bg=cnp_insert_frame["bg"], fg="#4380FA", width=width_label
         ).grid(row=0, column=0)
@@ -494,7 +497,7 @@ class AsistentFrame(TitleFrame):
             relief="flat",
             width=15,
             height=2,
-            command=self.insert_administrated_test(),
+            command=lambda: self.insert_administrated_test(),
         ).place(x=80, y=450)
         a2 = tk.Button(
             self.win2,
@@ -910,12 +913,18 @@ class AsistentFrame(TitleFrame):
     def _return_id(self, table, id_suffix, filter_value, value):
         if not value:
             return
-        query_select = f"SELECT id_{id_suffix} FROM {table} WHERE {filter_value} = {value}"
+        query_select = f"SELECT id_{id_suffix} FROM {table} WHERE {filter_value} = '{value}'"
         result = self.controller.run_query(query_select)
         if len(result) > 1:
             print("nunu")
         else:
             return result[0][0]
+
+    def _get_tests(self):
+        query_select = "SELECT nume_test from teste"
+        result = self.controller.run_query(query_select)
+        flatten = [item for sublist in result for item in sublist]
+        return flatten
 
     def insert_appointment(self):
         if not self.cod_programare_insert:
@@ -992,16 +1001,13 @@ class AsistentFrame(TitleFrame):
             return
         if not self.nume_test_insert:
             return
-        if not self.tip_test_insert:
-            return
         if not self.cnp_insert:
             return
         id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_insert.get())
         id_asistent = self._return_id("asistenti", "asistent", "cod_asistent", self.employee_code.get())
-        id_laborant = self._return_id("laboranti", "laborant", "cod_laborant", self.employee_code.get())
+        id_laborant = self._return_id("laboranti", "laborant", "cod_laborant", "0")
         id_test = self._return_id("teste", "test", "nume_test", self.nume_test_insert.get())
-        id_tip_test = self._return_id("tipuri_teste", "tip_test", "denumire_tip_test", self.tip_test_insert.get())
-        query_administrated_test = f"INSERT INTO programari VALUES (NULL, {self.cod_programare_insert.get()}, TO_DATE('{self.data_prog_insert.get_date()}', 'DD.MM.YYYY'), {id_pacient}, {id_asistent},{id_laborant} {id_test})"
+        query_administrated_test = f"INSERT INTO teste_efectuate VALUES (NULL, TO_DATE('{self.data_recoltare_insert.get_date()}', 'DD.MM.YYYY'), NULL, {id_pacient}, {id_asistent},{id_laborant}, {id_test})"
 
         self.controller.run_query(query_administrated_test)
-        self.populate_table_appointments()
+        self.populate_table_administrated_tests()
