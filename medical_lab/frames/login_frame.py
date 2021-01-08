@@ -61,8 +61,10 @@ class LoginFrame(TitleFrame):
         self._id_label.set(label)
 
     def set_states(self, user_level, user_name, employee_code):
+
         if user_level == "pacient":
             self.controller.frames["PacientFrame"].main_frame_welcome_label_var.set(f"Welcome {user_name}")
+            self.controller.frames["PacientFrame"].pacient_code.set(employee_code)
             self.controller.render_frame("PacientFrame")
         else:
             if user_level == "laborant":
