@@ -76,7 +76,6 @@ class PacientFrame(TitleFrame):
             fg="#99CCFF",
         ).grid(row=0, column=0, padx=10, pady=15)
 
-    
         tk.Button(
             self.dashboard_frame,
             text="View tests bulletin",
@@ -88,8 +87,6 @@ class PacientFrame(TitleFrame):
             command=lambda: self.add_testBulletin(),
         ).grid(row=2, column=0, padx=30, pady=5)
 
-        
-
         tk.Button(
             self.dashboard_frame,
             text="View Payments",
@@ -100,9 +97,6 @@ class PacientFrame(TitleFrame):
             width=20,
             command=lambda: self.update_testBulletin(),
         ).grid(row=3, column=0, padx=30, pady=5)
-        
-
-
 
     def on_logout(self):
         from tkinter import messagebox
@@ -111,7 +105,7 @@ class PacientFrame(TitleFrame):
             self.controller.render_frame("LoginFrame")
 
     def add_administratedtest(self):
-        print("New Page")
+
         self.win2 = tk.Toplevel()
         self.win2.title("Add Administrated test")
         self.win2.geometry("500x500")
@@ -173,7 +167,7 @@ class PacientFrame(TitleFrame):
         self.win2.mainloop()
 
     def update_administratedtest(self):
-        print("New Page")
+
         self.win2 = tk.Toplevel()
         self.win2.title("Update Administrated Test")
         self.win2.geometry("500x500")
@@ -247,7 +241,7 @@ class PacientFrame(TitleFrame):
         self.win2.mainloop()
 
     def remove_administratedtest(self):
-        print("New Page")
+
         self.win2 = tk.Toplevel()
         self.win2.title("Remove Administrated Test")
         self.win2.geometry("500x500")
@@ -320,10 +314,8 @@ class PacientFrame(TitleFrame):
         a2.place(x=270, y=450)
         self.win2.mainloop()
 
-
-
     def add_testBulletin(self):
-        print("New Page")
+
         self.win2 = tk.Toplevel()
         self.win2.title("Add Test Bulletin")
         self.win2.geometry("500x500")
@@ -397,7 +389,7 @@ class PacientFrame(TitleFrame):
         self.win2.mainloop()
 
     def update_testBulletin(self):
-        print("New Page")
+
         self.win2 = tk.Toplevel()
         self.win2.title("Update Test Bulletin")
         self.win2.geometry("500x500")
@@ -471,7 +463,7 @@ class PacientFrame(TitleFrame):
         self.win2.mainloop()
 
     def remove_testBulletin(self):
-        print("New Page")
+
         self.win2 = tk.Toplevel()
         self.win2.title("Remove Bulletin Test")
         self.win2.geometry("500x500")

@@ -20,5 +20,5 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3.7.7",
     ],
-    install_requires=["cx_Oracle", "pillow"],
+    install_requires=["cx_Oracle", "pillow", "tkcalendar"],
 )

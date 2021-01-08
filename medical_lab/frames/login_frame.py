@@ -1,6 +1,7 @@
 import tkinter as tk
-from tkinter import font as tkfont, ttk
+from tkinter import font as tkfont
 from .base_frame import TitleFrame
+from tkinter import messagebox
 
 
 class LoginFrame(TitleFrame):
@@ -59,46 +60,41 @@ class LoginFrame(TitleFrame):
         label = "employee id" if value in ["asistent", "laborant"] else "cnp pacient"
         self._id_label.set(label)
 
-    def set_states(self, user_level, user_name):
+    def set_states(self, user_level, user_name, employee_code):
         if user_level == "pacient":
-            print("Pacient")
             self.controller.frames["PacientFrame"].main_frame_welcome_label_var.set(f"Welcome {user_name}")
             self.controller.render_frame("PacientFrame")
-            return
         else:
-            print("hey")
             if user_level == "laborant":
-                print("buna")
                 self.controller.frames["LaborantFrame"].main_frame_welcome_label_var.set(f"Welcome {user_name}")
                 self.controller.render_frame("LaborantFrame")
             if user_level == "asistent":
-                print("ziua")
-                # self.controller.set_state(self.controller.frames["AsistentFrame"].dashboard_frame)
-                # self.controller.set_state(self.controller.render_frame("AsistentFrame"))
                 self.controller.frames["AsistentFrame"].main_frame_welcome_label_var.set(f"Welcome {user_name}")
+                self.controller.frames["AsistentFrame"].employee_code.set(employee_code)
                 self.controller.render_frame("AsistentFrame")
 
     def on_login(self):
         query = ""
         account = self.variable.get()
         code = self.employee_id_entry.get()
-        if account == "asistent":
-            query = f"select a.id_asistent, a.nume_asistent, a.email from asistenti a where a.cod_asistent='{code}'"
-        elif account == "laborant":
-            query = f"select l.id_laborant, l.nume_laborant, l.email from laboranti l where l.cod_laborant='{code}'"
-        elif account == "pacient":
-            query = f"select p.id_pacient, p.nume_pacient, p.email from pacienti p where p.cnp='{code}'"
-
-        user_info = [item for t in self.controller.run_query(query) for item in t]
-        if user_info:
-            self.controller.user_info["user_id"] = user_info[0]
-            self.controller.user_info["name"] = user_info[1]
-            self.controller.user_info["email"] = user_info[2]
-
-            self.controller.recreate_frame()
-            self.set_states(account, user_info[1])
-
-        else:
-            from tkinter import messagebox
-
+        if code == "0":
             messagebox.showinfo("Login Failed", "Wrong id")
+        else:
+            if account == "asistent":
+                query = f"select a.id_asistent, a.nume_asistent, a.email from asistenti a where a.cod_asistent='{code}'"
+            elif account == "laborant":
+                query = f"select l.id_laborant, l.nume_laborant, l.email from laboranti l where l.cod_laborant='{code}'"
+            elif account == "pacient":
+                query = f"select p.id_pacient, p.nume_pacient, p.email from pacienti p where p.cnp='{code}'"
+
+            user_info = [item for t in self.controller.run_query(query) for item in t]
+            if user_info:
+                self.controller.user_info["user_id"] = user_info[0]
+                self.controller.user_info["name"] = user_info[1]
+                self.controller.user_info["email"] = user_info[2]
+
+                self.controller.recreate_frame()
+                self.set_states(account, user_info[1], code)
+
+            else:
+                messagebox.showinfo("Login Failed", "Wrong id")
