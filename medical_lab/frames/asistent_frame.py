@@ -18,6 +18,7 @@ class AsistentFrame(TitleFrame):
         self.bg_color = "gray97"
         self.btn_fg = "white"
         self.button_font = tkfont.Font(family="Helvetica", size=10)
+        self.popup_width_label = 18
 
         self.main_frame_welcome_label_var = tk.StringVar()
         self.employee_code = tk.StringVar()
@@ -67,7 +68,6 @@ class AsistentFrame(TitleFrame):
 
         self.dashboard_frame = tk.Frame(parent, bg="gray97", bd=0)
         self.dashboard_frame.grid(row=0, column=0, rowspan=10, sticky=tk.NSEW)
-        # self.dashboard_frame.place(x=0, y=0, anchor="nw", width=225, height=650)
 
         tk.Label(
             self.dashboard_frame,
@@ -76,125 +76,30 @@ class AsistentFrame(TitleFrame):
             bg="gray97",
             fg="#99CCFF",
         ).grid(row=0, column=0, padx=10, pady=15)
+        self._dashboard_button("View payments", lambda: self.populate_table_payments(), 1, (5, 5))
+        self._dashboard_button("Add payment", lambda: self.add_payment(), 2, 0)
+        self._dashboard_button("Remove payment", lambda: self.remove_payment(), 3)
+        self._dashboard_button("Update payment", lambda: self.update_payment(), 4)
+        self._dashboard_button("View appointments", lambda: self.populate_table_appointments(), 5, (30, 5))
+        self._dashboard_button("Add appointment", lambda: self.add_appointment(), 6)
+        self._dashboard_button("Remove appointment", lambda: self.remove_appointment(), 7)
+        self._dashboard_button("Update appointment", lambda: self.update_appointment(), 8)
+        self._dashboard_button("View administered tests", lambda: self.populate_table_administrated_tests(), 9, (30, 5))
+        self._dashboard_button("Add administered test", lambda: self.add_administeredTest(), 10)
 
-        tk.Button(
-            self.dashboard_frame,
-            text="View payments",
-            font=self.button_font,
-            bg="gray97",
-            fg="#4380FA",
-            relief="flat",
-            width=20,
-            command=lambda: self.populate_table_payments(),
-        ).grid(row=1, column=0, padx=30, pady=(5, 5))
-        tk.Button(
-            self.dashboard_frame,
-            text="Add payment",
-            font=self.button_font,
-            bg="gray97",
-            fg="#4380FA",
-            relief="flat",
-            width=20,
-            command=lambda: self.add_payment(),
-        ).grid(row=2, column=0, padx=30)
+        self._dashboard_button("Remove administered test", lambda: self.remove_administeredTest(), 11)
 
+    def _dashboard_button(self, title, command, row, pady=5):
         tk.Button(
             self.dashboard_frame,
-            text="Remove payment",
+            text=title,
             font=self.button_font,
             bg="gray97",
             fg="#4380FA",
             relief="flat",
             width=20,
-            command=lambda: self.remove_payment(),
-        ).grid(row=3, column=0, padx=30, pady=5)
-
-        tk.Button(
-            self.dashboard_frame,
-            text="Update payment",
-            font=self.button_font,
-            bg="gray97",
-            fg="#4380FA",
-            relief="flat",
-            width=20,
-            command=lambda: self.update_payment(),
-        ).grid(row=4, column=0, padx=30, pady=5)
-
-        tk.Button(
-            self.dashboard_frame,
-            text="View appointments",
-            font=self.button_font,
-            bg="gray97",
-            fg="#4380FA",
-            relief="flat",
-            width=20,
-            command=lambda: self.populate_table_appointments(),
-        ).grid(row=5, column=0, padx=35, pady=(30, 5))
-
-        tk.Button(
-            self.dashboard_frame,
-            text="Add appointment",
-            font=self.button_font,
-            bg="gray97",
-            fg="#4380FA",
-            relief="flat",
-            width=20,
-            command=lambda: self.add_appointment(),
-        ).grid(row=6, column=0, padx=35, pady=5)
-
-        tk.Button(
-            self.dashboard_frame,
-            text="Remove appointment",
-            font=self.button_font,
-            bg="gray97",
-            fg="#4380FA",
-            relief="flat",
-            width=20,
-            command=lambda: self.remove_appointment(),
-        ).grid(row=7, column=0, padx=35, pady=5)
-
-        tk.Button(
-            self.dashboard_frame,
-            text="Update appointment",
-            font=self.button_font,
-            bg="gray97",
-            fg="#4380FA",
-            relief="flat",
-            width=20,
-            command=lambda: self.update_appointment(),
-        ).grid(row=8, column=0, padx=35, pady=5)
-
-        tk.Button(
-            self.dashboard_frame,
-            text="View administered tests",
-            font=self.button_font,
-            bg="gray97",
-            fg="#4380FA",
-            relief="flat",
-            width=20,
-            command=lambda: self.populate_table_administrated_tests(),
-        ).grid(row=9, column=0, padx=35, pady=(30, 5))
-        tk.Button(
-            self.dashboard_frame,
-            text="Add administered test",
-            font=self.button_font,
-            bg="gray97",
-            fg="#4380FA",
-            relief="flat",
-            width=20,
-            command=lambda: self.add_administeredTest(),
-        ).grid(row=10, column=0, padx=35, pady=5)
-
-        tk.Button(
-            self.dashboard_frame,
-            text="Remove administered test",
-            font=self.button_font,
-            bg="gray97",
-            fg="#4380FA",
-            relief="flat",
-            width=20,
-            command=lambda: self.remove_administeredTest(),
-        ).grid(row=11, column=0, padx=35, pady=5)
+            command=command,
+        ).grid(row=row, column=0, padx=35, pady=pady)
 
     def on_logout(self):
         from tkinter import messagebox
@@ -202,30 +107,22 @@ class AsistentFrame(TitleFrame):
         if messagebox.askokcancel("Logout", "Are you sure you want to logout?"):
             self.controller.render_frame("LoginFrame")
 
+    def _popup_window(self):
+        win2 = tk.Toplevel()
+        win2.title("Add Appointment")
+        win2.geometry("500x500")
+        win2.resizable(0, 0)
+        win2.config(bg="gray97")
+        return win2
+
     def add_appointment(self):
-        self.win2 = tk.Toplevel()
-        self.win2.title("Add Appointment")
-        self.win2.geometry("500x500")
-        self.win2.resizable(0, 0)
-        self.win2.config(bg="gray97")
-        width_label = 18
-        cod_programare_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        cod_programare_insert_frame.grid(row=0, column=0, pady=20, padx=80, sticky="w")
-        tk.Label(
-            cod_programare_insert_frame,
-            text="Appointment Code ",
-            bg=cod_programare_insert_frame["bg"],
-            fg="#4380FA",
-            width=width_label,
-        ).grid(row=0, column=0)
+        self.win2 = self._popup_window()
+
+        cod_programare_insert_frame = self._popup_labelframe(0, "Appointment Code", self.popup_width_label)
         self.cod_programare_insert = tk.Entry(cod_programare_insert_frame)
         self.cod_programare_insert.grid(row=0, column=1, padx=5, pady=10)
 
-        data_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        data_insert_frame.grid(row=1, column=0, pady=20, padx=80, sticky="w")
-        tk.Label(
-            data_insert_frame, text="Appointment Date ", bg=data_insert_frame["bg"], fg="#4380FA", width=width_label
-        ).grid(row=0, column=0)
+        self._popup_labelframe(1, "Appointment Date", self.popup_width_label)
         now = datetime.now()
         self.data_prog_insert = Calendar(
             self.win2,
@@ -241,65 +138,23 @@ class AsistentFrame(TitleFrame):
         )
         self.data_prog_insert.grid(row=2, column=0, pady=20, padx=80, sticky="w")
 
-        cnp_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        cnp_insert_frame.grid(row=3, column=0, pady=20, padx=80, sticky="w")
-        tk.Label(
-            cnp_insert_frame, text="Pacient CNP ", bg=cnp_insert_frame["bg"], fg="#4380FA", width=width_label
-        ).grid(row=0, column=0)
+        cnp_insert_frame = self._popup_labelframe(3, "Pacient CNP", self.popup_width_label)
         self.cnp_insert = tk.Entry(cnp_insert_frame)
         self.cnp_insert.grid(row=0, column=1, padx=5, pady=10)
 
-        tk.Button(
-            self.win2,
-            text="Insert",
-            font=("Helvetica", 10),
-            bg="gray97",
-            fg="#4380FA",
-            relief="flat",
-            width=15,
-            height=2,
-            command=lambda: self.insert_appointment(),
-        ).place(x=80, y=450)
-        a2 = tk.Button(
-            self.win2,
-            text=("Exit"),
-            font=("Helvetica", 10),
-            bg="gray97",
-            fg="#4380FA",
-            relief="flat",
-            width=15,
-            height=2,
-            command=self.Quit,
-        )
-        a2.place(x=270, y=450)
+        self._command_button(self.win2, "Insert", lambda: self.insert_appointment(), 450)
+        self._exit_button(self.win2, 450)
         self.win2.mainloop()
 
     def update_appointment(self):
 
-        self.win2 = tk.Toplevel()
-        self.win2.title("Update Appointment")
-        self.win2.geometry("500x500")
-        self.win2.resizable(0, 0)
-        self.win2.config(bg="gray97")
-        width_label = 18
+        self.win2 = self._popup_window()
 
-        cod_programare_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        cod_programare_insert_frame.grid(row=0, column=0, pady=20, padx=80, sticky="w")
-        tk.Label(
-            cod_programare_insert_frame,
-            text="Appointment Code ",
-            bg=cod_programare_insert_frame["bg"],
-            fg="#4380FA",
-            width=width_label,
-        ).grid(row=0, column=0)
+        cod_programare_insert_frame = self._popup_labelframe(0, "Appointment Code", self.popup_width_label)
         self.cod_programare_insert = tk.Entry(cod_programare_insert_frame)
         self.cod_programare_insert.grid(row=0, column=1, padx=5, pady=10)
 
-        data_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        data_insert_frame.grid(row=1, column=0, pady=5, padx=80, sticky="w")
-        tk.Label(
-            data_insert_frame, text="Appointment Date ", bg=data_insert_frame["bg"], fg="#4380FA", width=width_label
-        ).grid(row=0, column=0)
+        self._popup_labelframe(1, "Appointment Date", self.popup_width_label)
         now = datetime.now()
         self.data_prog_insert = Calendar(
             self.win2,
@@ -315,125 +170,41 @@ class AsistentFrame(TitleFrame):
         )
         self.data_prog_insert.grid(row=2, column=0, pady=20, padx=80, sticky="w")
 
-        cnp_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        cnp_insert_frame.grid(row=3, column=0, pady=5, padx=80, sticky="w")
-        tk.Label(
-            cnp_insert_frame, text="Pacient CNP ", bg=cnp_insert_frame["bg"], fg="#4380FA", width=width_label
-        ).grid(row=0, column=0)
+        cnp_insert_frame = self._popup_labelframe(3, "Pacient CNP", self.popup_width_label)
         self.cnp_insert = tk.Entry(cnp_insert_frame)
         self.cnp_insert.grid(row=0, column=1, padx=5, pady=10)
 
-        tk.Button(
-            self.win2,
-            text="Update",
-            font=("Helvetica", 10),
-            bg="gray97",
-            fg="#4380FA",
-            relief="flat",
-            width=15,
-            height=2,
-            command=lambda: self.update_Appointment(),
-        ).place(x=80, y=450)
-        a2 = tk.Button(
-            self.win2,
-            text=("Exit"),
-            font=("Helvetica", 10),
-            bg="gray97",
-            fg="#4380FA",
-            relief="flat",
-            width=15,
-            height=2,
-            command=self.Quit,
-        )
-        a2.place(x=270, y=450)
+        self._command_button(self.win2, "Update", lambda: self.update_Appointment(), 450)
+        self._exit_button(self.win2, 450)
         self.win2.mainloop()
 
     def remove_appointment(self):
 
-        self.win2 = tk.Toplevel()
-        self.win2.title("Remove Appointment")
-        self.win2.geometry("500x300")
-        self.win2.resizable(0, 0)
-        self.win2.config(bg="gray97")
-        width_label = 18
+        self.win2 = self._popup_window()
 
-        cod_programare_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        cod_programare_insert_frame.grid(row=0, column=0, pady=20, padx=80, sticky="w")
-        tk.Label(
-            cod_programare_insert_frame,
-            text="Appointment Code ",
-            bg=cod_programare_insert_frame["bg"],
-            fg="#4380FA",
-            width=width_label,
-        ).grid(row=0, column=0)
+        cod_programare_insert_frame = self._popup_labelframe(0, "Appointment Code", self.popup_width_label)
         self.cod_programare_insert = tk.Entry(cod_programare_insert_frame)
         self.cod_programare_insert.grid(row=0, column=1, padx=5, pady=10)
 
-        cnp_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        cnp_insert_frame.grid(row=3, column=0, pady=20, padx=80, sticky="w")
-        tk.Label(
-            cnp_insert_frame, text="Pacient CNP ", bg=cnp_insert_frame["bg"], fg="#4380FA", width=width_label
-        ).grid(row=0, column=0)
+        cnp_insert_frame = self._popup_labelframe(3, "Pacient CNP", self.popup_width_label)
         self.cnp_insert = tk.Entry(cnp_insert_frame)
         self.cnp_insert.grid(row=0, column=1, padx=5, pady=10)
 
-        tk.Button(
-            self.win2,
-            text="Remove",
-            font=("Helvetica", 10),
-            bg="gray97",
-            fg="#4380FA",
-            relief="flat",
-            width=15,
-            height=2,
-            command=lambda: self.delete_appointment(),
-        ).place(x=80, y=220)
-        a2 = tk.Button(
-            self.win2,
-            text=("Exit"),
-            font=("Helvetica", 10),
-            bg="gray97",
-            fg="#4380FA",
-            relief="flat",
-            width=15,
-            height=2,
-            command=self.Quit,
-        )
-        a2.place(x=270, y=220)
+        self._command_button(self.win2, "Remove", lambda: self.delete_appointment())
+        self._exit_button(self.win2)
         self.win2.mainloop()
 
     def add_administeredTest(self):
 
-        self.win2 = tk.Toplevel()
-        self.win2.title("Add Administered Test")
-        self.win2.geometry("500x500")
-        self.win2.resizable(0, 0)
-        self.win2.config(bg="gray97")
-        width_label = 15
+        self.win2 = self._popup_window()
 
-        nume_test_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        nume_test_insert_frame.grid(row=1, column=0, pady=15, padx=80, sticky="w")
-        tk.Label(
-            nume_test_insert_frame,
-            text="Choose the administered test ",
-            bg=nume_test_insert_frame["bg"],
-            fg="#4380FA",
-            width=30,
-        ).grid(row=0, column=0)
+        self._popup_labelframe(1, "Choose the administrated test", 25)
 
         self.nume_test_insert = ttk.Combobox(self.win2, values=self._get_tests())
         self.nume_test_insert.grid(column=0, row=2)
         self.nume_test_insert.current(1)
 
-        data_recoltare_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        data_recoltare_insert_frame.grid(row=3, column=0, pady=5, padx=80, sticky="w")
-        tk.Label(
-            data_recoltare_insert_frame,
-            text="Date Collecting Blood Sample",
-            bg=data_recoltare_insert_frame["bg"],
-            fg="#4380FA",
-            width=25,
-        ).grid(row=0, column=0)
+        self._popup_labelframe(3, "Date Collecting Blood Sample", 25)
         now = datetime.now()
         self.data_recoltare_insert = Calendar(
             self.win2,
@@ -450,113 +221,37 @@ class AsistentFrame(TitleFrame):
         )
         self.data_recoltare_insert.grid(row=4, column=0, padx=5, pady=10)
 
-        cnp_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        cnp_insert_frame.grid(row=5, column=0, pady=5, padx=80, sticky="w")
-        tk.Label(
-            cnp_insert_frame, text="Pacient CNP ", bg=cnp_insert_frame["bg"], fg="#4380FA", width=width_label
-        ).grid(row=0, column=0)
+        cnp_insert_frame = self._popup_labelframe(5, "Pacient CNP", self.popup_width_label)
         self.cnp_insert = tk.Entry(cnp_insert_frame)
         self.cnp_insert.grid(row=0, column=1, padx=5, pady=10)
 
-        tk.Button(
-            self.win2,
-            text="Insert",
-            font=("Helvetica", 10),
-            bg="gray97",
-            fg="#4380FA",
-            relief="flat",
-            width=15,
-            height=2,
-            command=lambda: self.insert_administrated_test(),
-        ).place(x=80, y=450)
-        a2 = tk.Button(
-            self.win2,
-            text=("Exit"),
-            font=("Helvetica", 10),
-            bg="gray97",
-            fg="#4380FA",
-            relief="flat",
-            width=15,
-            height=2,
-            command=self.Quit,
-        )
-        a2.place(x=270, y=450)
+        self._command_button(self.win2, "Remove", lambda: self.delete_payment(), 450)
+        self._exit_button(self.win2, 450)
         self.win2.mainloop()
 
     def remove_administeredTest(self):
 
-        self.win2 = tk.Toplevel()
-        self.win2.title("Remove Administered Test")
-        self.win2.geometry("500x300")
-        self.win2.resizable(0, 0)
-        self.win2.config(bg="gray97")
-        width_label = 18
+        self.win2 = self._popup_window()
 
-        nume_test_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        nume_test_insert_frame.grid(row=1, column=0, pady=15, padx=80, sticky="w")
-        tk.Label(
-            nume_test_insert_frame,
-            text="Choose the administered test ",
-            bg=nume_test_insert_frame["bg"],
-            fg="#4380FA",
-            width=30,
-        ).grid(row=0, column=0)
+        self._popup_labelframe(1, "Choose the administrated test", 25)
 
         self.nume_test_insert = ttk.Combobox(self.win2, values=self._get_tests())
         self.nume_test_insert.grid(column=0, row=2)
         self.nume_test_insert.current(1)
 
-        cnp_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        cnp_insert_frame.grid(row=3, column=0, pady=20, padx=80, sticky="w")
-        tk.Label(
-            cnp_insert_frame, text="Pacient CNP ", bg=cnp_insert_frame["bg"], fg="#4380FA", width=width_label
-        ).grid(row=0, column=0)
+        cnp_insert_frame = self._popup_labelframe(3, "Pacient CNP", self.popup_width_label)
         self.cnp_insert = tk.Entry(cnp_insert_frame)
         self.cnp_insert.grid(row=0, column=1, padx=5, pady=10)
 
-        tk.Button(
-            self.win2,
-            text="Remove",
-            font=("Helvetica", 10),
-            bg="gray97",
-            fg="#4380FA",
-            relief="flat",
-            width=15,
-            height=2,
-            command=lambda: self.delete_administrated_test(),
-        ).place(x=80, y=220)
-        a2 = tk.Button(
-            self.win2,
-            text=("Exit"),
-            font=("Helvetica", 10),
-            bg="gray97",
-            fg="#4380FA",
-            relief="flat",
-            width=15,
-            height=2,
-            command=self.Quit,
-        )
-        a2.place(x=270, y=220)
+        self._command_button(self.win2, "Remove", lambda: self.delete_administrated_test())
+        self._exit_button(self.win2)
         self.win2.mainloop()
 
     def add_payment(self):
 
-        self.win2 = tk.Toplevel()
-        self.win2.title("Add Payment")
-        self.win2.geometry("500x500")
-        self.win2.resizable(0, 0)
-        self.win2.config(bg="gray97")
-        width_label = 18
+        self.win2 = self._popup_window()
 
-        data_plata_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        data_plata_insert_frame.grid(row=1, column=0, pady=15, padx=80, sticky="w")
-        tk.Label(
-            data_plata_insert_frame,
-            text="Payment Date ",
-            bg=data_plata_insert_frame["bg"],
-            fg="#4380FA",
-            width=width_label,
-        ).grid(row=0, column=0)
+        self._popup_labelframe(1, "Payment Date", self.popup_width_label)
         now = datetime.now()
         self.data_plata_insert = Calendar(
             self.win2,
@@ -572,159 +267,70 @@ class AsistentFrame(TitleFrame):
         )
         self.data_plata_insert.grid(row=2, column=0, padx=5, pady=5)
 
-        total_plata_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        total_plata_insert_frame.grid(row=3, column=0, pady=10, padx=80, sticky="w")
-        tk.Label(
-            total_plata_insert_frame,
-            text="Total Payment ",
-            bg=total_plata_insert_frame["bg"],
-            fg="#4380FA",
-            width=width_label,
-        ).grid(row=0, column=0)
+        total_plata_insert_frame = self._popup_labelframe(3, "Total Payment", self.popup_width_label)
         self.total_plata_insert = tk.Entry(total_plata_insert_frame)
         self.total_plata_insert.grid(row=0, column=1, padx=5, pady=5)
 
-        cnp_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        cnp_insert_frame.grid(row=5, column=0, pady=10, padx=80, sticky="w")
-        tk.Label(
-            cnp_insert_frame, text="Pacient CNP ", bg=cnp_insert_frame["bg"], fg="#4380FA", width=width_label
-        ).grid(row=0, column=0)
+        cnp_insert_frame = self._popup_labelframe(5, "Pacient CNP", self.popup_width_label)
         self.cnp_insert = tk.Entry(cnp_insert_frame)
         self.cnp_insert.grid(row=0, column=1, padx=5, pady=5)
 
-        tk.Button(
-            self.win2,
-            text="Insert",
-            font=("Helvetica", 10),
-            bg="gray97",
-            fg="#4380FA",
-            relief="flat",
-            width=15,
-            height=2,
-            command=lambda: self.insert_payment(),
-        ).place(x=80, y=450)
-        a2 = tk.Button(
-            self.win2,
-            text=("Exit"),
-            font=("Helvetica", 10),
-            bg="gray97",
-            fg="#4380FA",
-            relief="flat",
-            width=15,
-            height=2,
-            command=self.Quit,
-        )
-        a2.place(x=270, y=450)
+        self._command_button(self.win2, "Insert", lambda: self.insert_payment(), 450)
+        self._exit_button(self.win2, 450)
         self.win2.mainloop()
 
     def update_payment(self):
 
-        self.win2 = tk.Toplevel()
-        self.win2.title("Update Payment")
-        self.win2.geometry("500x300")
-        self.win2.resizable(0, 0)
-        self.win2.config(bg="gray97")
-        width_label = 18
+        self.win2 = self._popup_window()
 
-        id_plata_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        id_plata_insert_frame.grid(row=1, column=0, pady=10, padx=80, sticky="w")
-        tk.Label(
-            id_plata_insert_frame,
-            text="Payment ID ",
-            bg=id_plata_insert_frame["bg"],
-            fg="#4380FA",
-            width=width_label,
-        ).grid(row=0, column=0)
+        id_plata_insert_frame = self._popup_labelframe(0, "Payment ID", self.popup_width_label)
         self.id_plata_insert = tk.Entry(id_plata_insert_frame)
         self.id_plata_insert.grid(row=0, column=1, padx=5, pady=5)
 
-        total_plata_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        total_plata_insert_frame.grid(row=2, column=0, pady=10, padx=80, sticky="w")
-        tk.Label(
-            total_plata_insert_frame,
-            text="Total Payment ",
-            bg=total_plata_insert_frame["bg"],
-            fg="#4380FA",
-            width=width_label,
-        ).grid(row=0, column=0)
+        total_plata_insert_frame = self._popup_labelframe(1, "Total Payment", self.popup_width_label)
         self.total_plata_insert = tk.Entry(total_plata_insert_frame)
         self.total_plata_insert.grid(row=0, column=1, padx=5, pady=5)
 
-        cnp_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        cnp_insert_frame.grid(row=3, column=0, pady=10, padx=80, sticky="w")
-        tk.Label(
-            cnp_insert_frame, text="Pacient CNP ", bg=cnp_insert_frame["bg"], fg="#4380FA", width=width_label
-        ).grid(row=0, column=0)
+        cnp_insert_frame = self._popup_labelframe(2, "Pacient CNP", self.popup_width_label)
         self.cnp_insert = tk.Entry(cnp_insert_frame)
         self.cnp_insert.grid(row=0, column=1, padx=5, pady=5)
 
-        tk.Button(
-            self.win2,
-            text="Update",
-            font=("Helvetica", 10),
-            bg="gray97",
-            fg="#4380FA",
-            relief="flat",
-            width=15,
-            height=2,
-            command=lambda: self.update_Payment(),
-        ).place(x=80, y=220)
-        a2 = tk.Button(
-            self.win2,
-            text=("Exit"),
-            font=("Helvetica", 10),
-            bg="gray97",
-            fg="#4380FA",
-            relief="flat",
-            width=15,
-            height=2,
-            command=self.Quit,
-        )
-        a2.place(x=270, y=220)
+        self._command_button(self.win2, "Update", lambda: self.update_Payment())
+        self._exit_button(self.win2)
         self.win2.mainloop()
 
     def remove_payment(self):
 
-        self.win2 = tk.Toplevel()
-        self.win2.title("Remove Payment")
-        self.win2.geometry("500x300")
-        self.win2.resizable(0, 0)
-        self.win2.config(bg="gray97")
-        width_label = 18
+        self.win2 = self._popup_window()
 
-        total_plata_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        total_plata_insert_frame.grid(row=2, column=0, pady=10, padx=80, sticky="w")
-        tk.Label(
-            total_plata_insert_frame,
-            text="Total Payment ",
-            bg=total_plata_insert_frame["bg"],
-            fg="#4380FA",
-            width=width_label,
-        ).grid(row=0, column=0)
-        self.total_plata_insert = tk.Entry(total_plata_insert_frame)
-        self.total_plata_insert.grid(row=0, column=1, padx=5, pady=5)
+        id_plata_delete_frame = self._popup_labelframe(0, "Payment ID", self.popup_width_label)
+        self.id_plata_delete = tk.Entry(id_plata_delete_frame)
+        self.id_plata_delete.grid(row=0, column=1, padx=5, pady=5)
 
-        cnp_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        cnp_insert_frame.grid(row=3, column=0, pady=20, padx=80, sticky="w")
-        tk.Label(
-            cnp_insert_frame, text="Pacient CNP ", bg=cnp_insert_frame["bg"], fg="#4380FA", width=width_label
-        ).grid(row=0, column=0)
-        self.cnp_insert = tk.Entry(cnp_insert_frame)
-        self.cnp_insert.grid(row=0, column=1, padx=5, pady=10)
+        cnp_delete_frame = self._popup_labelframe(1, "Pacient CNP", self.popup_width_label)
+        self.cnp_delete = tk.Entry(cnp_delete_frame)
+        self.cnp_delete.grid(row=0, column=1, padx=5, pady=10)
 
+        self._command_button(self.win2, "Remove", lambda: self.delete_payment())
+        self._exit_button(self.win2)
+        self.win2.mainloop()
+
+    def _command_button(self, window, title, command, y_axis=220):
         tk.Button(
-            self.win2,
-            text="Remove",
+            window,
+            text=title,
             font=("Helvetica", 10),
             bg="gray97",
             fg="#4380FA",
             relief="flat",
             width=15,
             height=2,
-            command=lambda: self.delete_payment(),
-        ).place(x=80, y=220)
-        a2 = tk.Button(
-            self.win2,
+            command=command,
+        ).place(x=80, y=y_axis)
+
+    def _exit_button(self, window, y_axis=220):
+        tk.Button(
+            window,
             text=("Exit"),
             font=("Helvetica", 10),
             bg="gray97",
@@ -733,9 +339,7 @@ class AsistentFrame(TitleFrame):
             width=15,
             height=2,
             command=self.Quit,
-        )
-        a2.place(x=270, y=220)
-        self.win2.mainloop()
+        ).place(x=270, y=y_axis)
 
     def Quit(self):
         answer = messagebox.askokcancel("Quit", "      Are you sure?")
@@ -862,10 +466,8 @@ class AsistentFrame(TitleFrame):
         if not self.table.is_item_selected():
             messagebox.showinfo("Delete Error", "Item not selected")
             return
-        id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_insert.get())
-        query_delete = (
-            f"DELETE FROM plati WHERE total_plata='{self.total_plata_insert.get()}' AND id_pacient={id_pacient}"
-        )
+        id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_delete.get())
+        query_delete = f"DELETE FROM plati WHERE id_plata='{self.id_plata_delete.get()}' AND id_pacient={id_pacient}"
         self.controller.run_query(query_delete)
         self.populate_table_payments()
 
@@ -919,3 +521,15 @@ class AsistentFrame(TitleFrame):
         query_delete = f"DELETE FROM teste_efectuate WHERE id_test='{id_test}' AND id_pacient={id_pacient}"
         self.controller.run_query(query_delete)
         self.populate_table_administrated_tests()
+
+    def _popup_labelframe(self, row, title, width_label):
+        label_frame = tk.LabelFrame(self.win2, bg="gray94")
+        label_frame.grid(row=row, column=0, pady=10, padx=80, sticky="w")
+        tk.Label(
+            label_frame,
+            text=title,
+            bg=label_frame["bg"],
+            fg="#4380FA",
+            width=width_label,
+        ).grid(row=0, column=0)
+        return label_frame
