@@ -116,3 +116,18 @@ class TableFrame(tk.Frame):
         if selected_item:
             return True
         return False
+
+    # def search(self, search_entry):
+    #     self.table.clear_table()
+    #     query = search_entry.get()
+    #     selections = []
+    #     print(tree.get_children())
+    #     for child in tree.get_children():
+    #         print(query)
+    #         print(tree.item(child)['values'])
+    #         if query.lower() in tree.item(child)['values']:
+    #         # compare strings in  lower cases.
+    #             print(tree.item(child)['values'])
+    #             selections.append(child)
+    #     print('search completed')
+    #     tree.selection_set(selections)
