@@ -20,6 +20,7 @@ class LaborantFrame(TitleFrame):
         self.popup_width_label = 18
 
         self.main_frame_welcome_label_var = tk.StringVar()
+        self.employee_code = tk.StringVar()
 
         laborant_frame = tk.Frame(master=self, bg=self.bg_color)
         laborant_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
@@ -80,7 +81,7 @@ class LaborantFrame(TitleFrame):
         self._dashboard_button("Remove test bulletin", lambda: self.remove_testBulletin(), 3)
         self._dashboard_button("Update Test bulletin", lambda: self.update_testBulletin(), 4)
         self._dashboard_button("View administered tests", lambda: self.populate_table_administrated_tests(), 5, (30, 5))
-        self._dashboard_button("Add administrated test", lambda: self.add_administeredTest(), 6)
+        self._dashboard_button("Update administrated test", lambda: self.update_administeredTest(), 6)
         self._dashboard_button("Remove administrated test", lambda: self.remove_administratedtest(), 7)
 
     def _dashboard_button(self, title, command, row, pady=5):
@@ -109,19 +110,17 @@ class LaborantFrame(TitleFrame):
         win2.config(bg="gray97")
         return win2
 
-    def add_administeredTest(self):
+    def update_administeredTest(self):
 
         self.win2 = self._popup_window()
 
-        self._popup_labelframe(1, "Choose the administrated test", 25)
+        id_test_efec_update_frame = self._popup_labelframe(0, "Administrated Test ID", 25)
+        self.id_test_efec_update = tk.Entry(id_test_efec_update_frame)
+        self.id_test_efec_update.grid(row=0, column=1, padx=5, pady=5)
 
-        self.nume_test_insert = ttk.Combobox(self.win2, values=self._get_tests())
-        self.nume_test_insert.grid(column=0, row=2)
-        self.nume_test_insert.current(1)
-
-        self._popup_labelframe(3, "Date Processing Blood Sample", 25)
+        self._popup_labelframe(1, "Date Processing Blood Sample", 25)
         now = datetime.now()
-        self.data_prelucrare_insert = Calendar(
+        self.data_prelucrare_update = Calendar(
             self.win2,
             font="Helvetica",
             selectmode="day",
@@ -134,13 +133,13 @@ class LaborantFrame(TitleFrame):
             maxdate=now,
             date_pattern="dd.mm.y",
         )
-        self.data_prelucrare_insert.grid(row=4, column=0, padx=5, pady=10)
+        self.data_prelucrare_update.grid(row=2, column=0, padx=5, pady=10)
 
-        cnp_insert_frame = self._popup_labelframe(5, "Pacient CNP", self.popup_width_label)
-        self.cnp_insert = tk.Entry(cnp_insert_frame)
-        self.cnp_insert.grid(row=0, column=1, padx=5, pady=10)
+        cnp_update_frame = self._popup_labelframe(3, "Pacient CNP", self.popup_width_label)
+        self.cnp_update = tk.Entry(cnp_update_frame)
+        self.cnp_update.grid(row=0, column=1, padx=5, pady=10)
 
-        self._command_button(self.win2, "Insert", lambda: self.insert_administrated_test())
+        self._command_button(self.win2, "Update", lambda: self.update_administrated_test())
         self._exit_button(self.win2)
 
         self.win2.mainloop()
@@ -317,17 +316,17 @@ class LaborantFrame(TitleFrame):
         query.extend(list(map("".join, self.controller.get_columns_name("tipuri_teste")))[1:2])
         query.extend(list(map("".join, self.controller.get_columns_name("teste")))[1:3])
         query.extend(list(map("".join, self.controller.get_columns_name("teste_efectuate")))[2:3])
-        query.extend(list(map("".join, self.controller.get_columns_name("asistenti")))[1:2])
+        query.extend(list(map("".join, self.controller.get_columns_name("laboranti")))[1:2])
         query.extend(list(map("".join, self.controller.get_columns_name("pacienti")))[1:3])
 
         self.table = TableFrame(self.base_frame, query)
         self.table.grid(row=1, column=1, columnspan=6, rowspan=9, sticky=tk.NSEW)
         self.table.tree.bind("<<TreeviewSelect>>")
         query_select = self.controller.run_query(
-            """select id_test_efectuat,denumire_tip_test, nume_test, pret_test,data_prelucrare, cod_asistent, nume_pacient,cnp 
-                from teste_efectuate e, teste t, tipuri_teste ti, asistenti a, pacienti p 
+            """select id_test_efectuat,denumire_tip_test, nume_test, pret_test,data_prelucrare, cod_laborant, nume_pacient,cnp 
+                from teste_efectuate e, teste t, tipuri_teste ti, laboranti l, pacienti p 
                 where p.id_pacient=e.id_pacient 
-                and a.id_asistent=e.id_asistent 
+                and l.id_laborant=e.id_laborant 
                 and t.id_test=e.id_test 
                 and t.id_tip_test=ti.id_tip_test"""
         )
@@ -348,18 +347,16 @@ class LaborantFrame(TitleFrame):
         self.controller.run_query(query_test_bulletin)
         self.populate_table_test_bulletin()
 
-    def insert_administrated_test(self):
-        if not self.data_prelucrare_insert:
+    def update_administrated_test(self):
+        if not self.data_prelucrare_update:
             return
-        if not self.nume_test_insert:
+        if not self.id_test_efec_update:
             return
-        if not self.cnp_insert:
+        if not self.cnp_update:
             return
-        id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_insert.get())
-        id_asistent = self._return_id("asistenti", "asistent", "cod_asistent", self.employee_code.get())
-        id_laborant = self._return_id("laboranti", "laborant", "cod_laborant", "0")
-        id_test = self._return_id("teste", "test", "nume_test", self.nume_test_insert.get())
-        query_administrated_test = f"INSERT INTO teste_efectuate VALUES (NULL, NULL, TO_DATE('{self.data_prelucrare_insert.get_date()}', 'DD.MM.YYYY'), {id_pacient}, {id_asistent},{id_laborant}, {id_test})"
+        id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_update.get())
+        id_laborant = self._return_id("laboranti", "laborant", "cod_laborant", self.employee_code.get())
+        query_administrated_test = f"UPDATE teste_efectuate SET data_prelucrare = TO_DATE('{self.data_prelucrare_update.get_date()}', 'DD.MM.YYYY'), id_laborant='{id_laborant}' WHERE id_pacient='{id_pacient}' AND id_test_efectuat='{self.id_test_efec_update.get()}'"
 
         self.controller.run_query(query_administrated_test)
         self.populate_table_administrated_tests()
