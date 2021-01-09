@@ -1,11 +1,10 @@
 from tkinter import messagebox
 from medical_lab.frames.table_frame import TableFrame
 import tkinter as tk
-from tkinter import font as tkfont, ttk
+from tkinter import font as tkfont
 from tkinter.constants import NW
 from .base_frame import TitleFrame
-from tkcalendar import Calendar
-from datetime import datetime
+from tkinter import messagebox
 
 
 class PacientFrame(TitleFrame):
@@ -91,15 +90,8 @@ class PacientFrame(TitleFrame):
         ).grid(row=row, column=0, padx=35, pady=pady)
 
     def on_logout(self):
-        from tkinter import messagebox
-
         if messagebox.askokcancel("Logout", "Are you sure you want to logout?"):
             self.controller.render_frame("LoginFrame")
-
-    def Quit(self):
-        answer = messagebox.askokcancel("Quit", "      Are you sure?")
-        if answer:
-            self.win2.destroy()
 
     def populate_table_bulletin_test(self):
         if self.table:

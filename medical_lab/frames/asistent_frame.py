@@ -150,13 +150,13 @@ class AsistentFrame(TitleFrame):
 
         self.win2 = self._popup_window()
 
-        cod_programare_insert_frame = self._popup_labelframe(0, "Appointment Code", self.popup_width_label)
-        self.cod_programare_insert = tk.Entry(cod_programare_insert_frame)
-        self.cod_programare_insert.grid(row=0, column=1, padx=5, pady=10)
+        cod_programare_update_frame = self._popup_labelframe(0, "Appointment Code", self.popup_width_label)
+        self.cod_programare_update = tk.Entry(cod_programare_update_frame)
+        self.cod_programare_update.grid(row=0, column=1, padx=5, pady=10)
 
         self._popup_labelframe(1, "Appointment Date", self.popup_width_label)
         now = datetime.now()
-        self.data_prog_insert = Calendar(
+        self.data_prog_update = Calendar(
             self.win2,
             font="Helvetica",
             selectmode="day",
@@ -168,11 +168,11 @@ class AsistentFrame(TitleFrame):
             mindate=now,
             date_pattern="dd.mm.y",
         )
-        self.data_prog_insert.grid(row=2, column=0, pady=20, padx=80, sticky="w")
+        self.data_prog_update.grid(row=2, column=0, pady=20, padx=80, sticky="w")
 
-        cnp_insert_frame = self._popup_labelframe(3, "Pacient CNP", self.popup_width_label)
-        self.cnp_insert = tk.Entry(cnp_insert_frame)
-        self.cnp_insert.grid(row=0, column=1, padx=5, pady=10)
+        cnp_update_frame = self._popup_labelframe(3, "Pacient CNP", self.popup_width_label)
+        self.cnp_update = tk.Entry(cnp_update_frame)
+        self.cnp_update.grid(row=0, column=1, padx=5, pady=10)
 
         self._command_button(self.win2, "Update", lambda: self.update_Appointment(), 450)
         self._exit_button(self.win2, 450)
@@ -182,13 +182,13 @@ class AsistentFrame(TitleFrame):
 
         self.win2 = self._popup_window()
 
-        cod_programare_insert_frame = self._popup_labelframe(0, "Appointment Code", self.popup_width_label)
-        self.cod_programare_insert = tk.Entry(cod_programare_insert_frame)
-        self.cod_programare_insert.grid(row=0, column=1, padx=5, pady=10)
+        cod_programare_remove_frame = self._popup_labelframe(0, "Appointment Code", self.popup_width_label)
+        self.cod_programare_remove = tk.Entry(cod_programare_remove_frame)
+        self.cod_programare_remove.grid(row=0, column=1, padx=5, pady=10)
 
-        cnp_insert_frame = self._popup_labelframe(3, "Pacient CNP", self.popup_width_label)
-        self.cnp_insert = tk.Entry(cnp_insert_frame)
-        self.cnp_insert.grid(row=0, column=1, padx=5, pady=10)
+        cnp_remove_frame = self._popup_labelframe(3, "Pacient CNP", self.popup_width_label)
+        self.cnp_remove = tk.Entry(cnp_remove_frame)
+        self.cnp_remove.grid(row=0, column=1, padx=5, pady=10)
 
         self._command_button(self.win2, "Remove", lambda: self.delete_appointment())
         self._exit_button(self.win2)
@@ -235,13 +235,13 @@ class AsistentFrame(TitleFrame):
 
         self._popup_labelframe(1, "Choose the administrated test", 25)
 
-        self.nume_test_insert = ttk.Combobox(self.win2, values=self._get_tests())
-        self.nume_test_insert.grid(column=0, row=2)
-        self.nume_test_insert.current(1)
+        self.nume_test_remove = ttk.Combobox(self.win2, values=self._get_tests())
+        self.nume_test_remove.grid(column=0, row=2)
+        self.nume_test_remove.current(1)
 
-        cnp_insert_frame = self._popup_labelframe(3, "Pacient CNP", self.popup_width_label)
-        self.cnp_insert = tk.Entry(cnp_insert_frame)
-        self.cnp_insert.grid(row=0, column=1, padx=5, pady=10)
+        cnp_remove_frame = self._popup_labelframe(3, "Pacient CNP", self.popup_width_label)
+        self.cnp_remove = tk.Entry(cnp_remove_frame)
+        self.cnp_remove.grid(row=0, column=1, padx=5, pady=10)
 
         self._command_button(self.win2, "Remove", lambda: self.delete_administrated_test())
         self._exit_button(self.win2)
@@ -283,17 +283,17 @@ class AsistentFrame(TitleFrame):
 
         self.win2 = self._popup_window()
 
-        id_plata_insert_frame = self._popup_labelframe(0, "Payment ID", self.popup_width_label)
-        self.id_plata_insert = tk.Entry(id_plata_insert_frame)
-        self.id_plata_insert.grid(row=0, column=1, padx=5, pady=5)
+        id_plata_update_frame = self._popup_labelframe(0, "Payment ID", self.popup_width_label)
+        self.id_plata_update = tk.Entry(id_plata_update_frame)
+        self.id_plata_update.grid(row=0, column=1, padx=5, pady=5)
 
-        total_plata_insert_frame = self._popup_labelframe(1, "Total Payment", self.popup_width_label)
-        self.total_plata_insert = tk.Entry(total_plata_insert_frame)
-        self.total_plata_insert.grid(row=0, column=1, padx=5, pady=5)
+        total_plata_update_frame = self._popup_labelframe(1, "Total Payment", self.popup_width_label)
+        self.total_plata_update = tk.Entry(total_plata_update_frame)
+        self.total_plata_update.grid(row=0, column=1, padx=5, pady=5)
 
-        cnp_insert_frame = self._popup_labelframe(2, "Pacient CNP", self.popup_width_label)
-        self.cnp_insert = tk.Entry(cnp_insert_frame)
-        self.cnp_insert.grid(row=0, column=1, padx=5, pady=5)
+        cnp_update_frame = self._popup_labelframe(2, "Pacient CNP", self.popup_width_label)
+        self.cnp_update = tk.Entry(cnp_update_frame)
+        self.cnp_update.grid(row=0, column=1, padx=5, pady=5)
 
         self._command_button(self.win2, "Update", lambda: self.update_Payment())
         self._exit_button(self.win2)
@@ -303,17 +303,29 @@ class AsistentFrame(TitleFrame):
 
         self.win2 = self._popup_window()
 
-        id_plata_delete_frame = self._popup_labelframe(0, "Payment ID", self.popup_width_label)
-        self.id_plata_delete = tk.Entry(id_plata_delete_frame)
-        self.id_plata_delete.grid(row=0, column=1, padx=5, pady=5)
+        id_plata_remove_frame = self._popup_labelframe(0, "Payment ID", self.popup_width_label)
+        self.id_plata_remove = tk.Entry(id_plata_remove_frame)
+        self.id_plata_remove.grid(row=0, column=1, padx=5, pady=5)
 
-        cnp_delete_frame = self._popup_labelframe(1, "Pacient CNP", self.popup_width_label)
-        self.cnp_delete = tk.Entry(cnp_delete_frame)
-        self.cnp_delete.grid(row=0, column=1, padx=5, pady=10)
+        cnp_remove_frame = self._popup_labelframe(1, "Pacient CNP", self.popup_width_label)
+        self.cnp_remove = tk.Entry(cnp_remove_frame)
+        self.cnp_remove.grid(row=0, column=1, padx=5, pady=10)
 
         self._command_button(self.win2, "Remove", lambda: self.delete_payment())
         self._exit_button(self.win2)
         self.win2.mainloop()
+
+    def _popup_labelframe(self, row, title, width_label):
+        label_frame = tk.LabelFrame(self.win2, bg="gray94")
+        label_frame.grid(row=row, column=0, pady=10, padx=80, sticky="w")
+        tk.Label(
+            label_frame,
+            text=title,
+            bg=label_frame["bg"],
+            fg="#4380FA",
+            width=width_label,
+        ).grid(row=0, column=0)
+        return label_frame
 
     def _command_button(self, window, title, command, y_axis=220):
         tk.Button(
@@ -398,14 +410,14 @@ class AsistentFrame(TitleFrame):
         if not self.table.is_item_selected():
             messagebox.showinfo("Update Error", "Item not selected")
             return
-        if not self.cod_programare_insert:
+        if not self.cod_programare_update:
             return
-        if not self.data_prog_insert:
+        if not self.data_prog_update:
             return
-        if not self.cnp_insert:
+        if not self.cnp_update:
             return
-        id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_insert.get())
-        query_update = f"UPDATE programari SET cod_programare='{self.cod_programare_insert.get()}', data_programare=TO_DATE('{self.data_prog_insert.get_date()}', 'DD.MM.YYYY') WHERE id_pacient={id_pacient}"
+        id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_update.get())
+        query_update = f"UPDATE programari SET cod_programare='{self.cod_programare_update.get()}', data_programare=TO_DATE('{self.data_prog_update.get_date()}', 'DD.MM.YYYY') WHERE id_pacient={id_pacient}"
         self.controller.run_query(query_update)
         self.populate_table_appointments()
 
@@ -413,8 +425,8 @@ class AsistentFrame(TitleFrame):
         if not self.table.is_item_selected():
             messagebox.showinfo("Delete Error", "Item not selected")
             return
-        id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_insert.get())
-        query_delete = f"DELETE FROM programari WHERE cod_programare='{self.cod_programare_insert.get()}' AND id_pacient={id_pacient}"
+        id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_remove.get())
+        query_delete = f"DELETE FROM programari WHERE cod_programare='{self.cod_programare_remove.get()}' AND id_pacient={id_pacient}"
         self.controller.run_query(query_delete)
         self.populate_table_appointments()
 
@@ -453,12 +465,12 @@ class AsistentFrame(TitleFrame):
         if not self.table.is_item_selected():
             messagebox.showinfo("Update Error", "Item not selected")
             return
-        if not self.id_plata_insert:
+        if not self.id_plata_update:
             return
-        if not self.cnp_insert:
+        if not self.cnp_update:
             return
-        id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_insert.get())
-        query_update = f"UPDATE plati SET total_plata='{self.total_plata_insert.get()}'  WHERE id_pacient={id_pacient} AND id_plata='{self.id_plata_insert.get()}'"
+        id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_update.get())
+        query_update = f"UPDATE plati SET total_plata='{self.total_plata_update.get()}'  WHERE id_pacient={id_pacient} AND id_plata='{self.id_plata_update.get()}'"
         self.controller.run_query(query_update)
         self.populate_table_payments()
 
@@ -466,8 +478,8 @@ class AsistentFrame(TitleFrame):
         if not self.table.is_item_selected():
             messagebox.showinfo("Delete Error", "Item not selected")
             return
-        id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_delete.get())
-        query_delete = f"DELETE FROM plati WHERE id_plata='{self.id_plata_delete.get()}' AND id_pacient={id_pacient}"
+        id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_remove.get())
+        query_delete = f"DELETE FROM plati WHERE id_plata='{self.id_plata_remove.get()}' AND id_pacient={id_pacient}"
         self.controller.run_query(query_delete)
         self.populate_table_payments()
 
@@ -516,20 +528,8 @@ class AsistentFrame(TitleFrame):
         if not self.table.is_item_selected():
             messagebox.showinfo("Delete Error", "Item not selected")
             return
-        id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_insert.get())
-        id_test = self._return_id("teste", "test", "nume_test", self.nume_test_insert.get())
+        id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_remove.get())
+        id_test = self._return_id("teste", "test", "nume_test", self.nume_test_remove.get())
         query_delete = f"DELETE FROM teste_efectuate WHERE id_test='{id_test}' AND id_pacient={id_pacient}"
         self.controller.run_query(query_delete)
         self.populate_table_administrated_tests()
-
-    def _popup_labelframe(self, row, title, width_label):
-        label_frame = tk.LabelFrame(self.win2, bg="gray94")
-        label_frame.grid(row=row, column=0, pady=10, padx=80, sticky="w")
-        tk.Label(
-            label_frame,
-            text=title,
-            bg=label_frame["bg"],
-            fg="#4380FA",
-            width=width_label,
-        ).grid(row=0, column=0)
-        return label_frame
