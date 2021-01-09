@@ -507,9 +507,18 @@ class AsistentFrame(TitleFrame):
             return
         id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_insert.get())
         id_asistent = self._return_id("asistenti", "asistent", "cod_asistent", self.employee_code.get())
-        query_appointment = f"INSERT INTO programari VALUES (NULL, {self.cod_programare_insert.get()}, TO_DATE('{self.data_prog_insert.get_date()}', 'DD.MM.YYYY'), {id_pacient}, {id_asistent})"
+        query_existing_appointments = f"""SELECT COUNT(cod_programare) AS Total_programari
+                                        FROM programari
+                                        WHERE data_programare=TO_DATE('{self.data_prog_insert.get_date()}','DD.MM.YYYY')
+                                        group by cod_programare"""
+        total_programari = self.controller.run_query(query_existing_appointments)
+        if len(total_programari) > 0:
+            if total_programari[0][0] > 2:
+                messagebox.showinfo("Error", "Too many appointments for that day")
+        else:
+            query_appointment = f"INSERT INTO programari VALUES (NULL, {self.cod_programare_insert.get()}, TO_DATE('{self.data_prog_insert.get_date()}', 'DD.MM.YYYY'), {id_pacient}, {id_asistent})"
 
-        self.controller.run_query(query_appointment)
+            self.controller.run_query(query_appointment)
         self.populate_table_appointments()
 
     def update_Appointment(self):
