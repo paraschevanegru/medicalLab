@@ -59,7 +59,7 @@ class PacientFrame(TitleFrame):
         self.search_button.grid(row=0, column=6, padx=5, pady=10)
         self.base_frame = pacient_frame
         self.table = None
-        # self.populate_table_bulletin_test()
+        # self.populate_table_payments()
 
     def init_dashboard(self, parent):
         self.pacient_code = tk.StringVar()
@@ -75,7 +75,7 @@ class PacientFrame(TitleFrame):
         ).grid(row=0, column=0, padx=10, pady=15)
 
         self._dashboard_button("View tets bulletin", lambda: self.populate_table_bulletin_test(), 2)
-        self._dashboard_button("View Payments", lambda: self.update_testBulletin(), 3)
+        self._dashboard_button("View Payments", lambda: self.populate_table_payments(), 3)
 
     def _dashboard_button(self, title, command, row, pady=5):
         tk.Button(
@@ -114,6 +114,32 @@ class PacientFrame(TitleFrame):
                 AND d.id_test =  t.id_test
                 AND p.id_pacient = e.id_pacient
                 AND b.id_test_efectuat = e.id_test_efectuat
+                AND p.cnp = '{self.pacient_code.get()}'"""
+        )
+        for row in query_select:
+            self.table.insert("", "end", values=row)
+    def populate_table_payments(self):
+        if self.table:
+            self.table.clear_table()
+            self.table.destroy()
+        query_view = list(map("".join, self.controller.get_columns_name("buletine_teste")))[:1]
+        query_view.extend(list(map("".join, self.controller.get_columns_name("pacienti")))[1:2])
+        query_view.extend(list(map("".join, self.controller.get_columns_name("teste")))[1:2])
+        query_view.extend(list(map("".join, self.controller.get_columns_name("teste")))[2:3])
+        query_view.extend(list(map("".join, self.controller.get_columns_name("teste")))[3:4])
+        query_view.extend(list(map("".join, self.controller.get_columns_name("plati")))[1:2])
+
+        self.table = TableFrame(self.base_frame, query_view)
+        self.table.grid(row=1, column=1, columnspan=6, rowspan=9, sticky=tk.NSEW)
+        self.table.tree.bind("<<TreeviewSelect>>")
+        query_select = self.controller.run_query(
+            f"""SELECT b.id_buletin_test, p.nume_pacient, t.nume_test, t.pret_test,t.moneda,pl.data_plata
+                FROM teste_efectuate e, teste t, pacienti p, detalii_teste d, buletine_teste b,plati pl
+                WHERE e.id_test = t.id_test 
+                AND d.id_test =  t.id_test
+                AND p.id_pacient = e.id_pacient
+                AND b.id_test_efectuat = e.id_test_efectuat
+                AND p.id_pacient = pl.id_pacient
                 AND p.cnp = '{self.pacient_code.get()}'"""
         )
         for row in query_select:

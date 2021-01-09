@@ -175,4 +175,3 @@ DELETE FROM teste
 WHERE nume_test = 'Celule lupice';
 
 
-
