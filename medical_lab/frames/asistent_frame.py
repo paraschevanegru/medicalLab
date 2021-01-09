@@ -107,10 +107,10 @@ class AsistentFrame(TitleFrame):
         if messagebox.askokcancel("Logout", "Are you sure you want to logout?"):
             self.controller.render_frame("LoginFrame")
 
-    def _popup_window(self, title):
+    def _popup_window(self, title,dim="500x500"):
         win2 = tk.Toplevel()
         win2.title(title)
-        win2.geometry("500x500")
+        win2.geometry(dim)
         win2.resizable(0, 0)
         win2.config(bg="gray97")
         return win2
@@ -180,18 +180,18 @@ class AsistentFrame(TitleFrame):
 
     def remove_appointment(self):
 
-        self.win2 = self._popup_window("Remove Appointment")
+        self.win2 = self._popup_window("Remove Appointment","500x300")
 
         cod_programare_remove_frame = self._popup_labelframe(0, "Appointment Code", self.popup_width_label)
         self.cod_programare_remove = tk.Entry(cod_programare_remove_frame)
         self.cod_programare_remove.grid(row=0, column=1, padx=5, pady=10)
 
-        cnp_remove_frame = self._popup_labelframe(3, "Pacient CNP", self.popup_width_label)
+        cnp_remove_frame = self._popup_labelframe(1, "Pacient CNP", self.popup_width_label)
         self.cnp_remove = tk.Entry(cnp_remove_frame)
         self.cnp_remove.grid(row=0, column=1, padx=5, pady=10)
 
-        self._command_button(self.win2, "Remove", lambda: self.delete_appointment())
-        self._exit_button(self.win2)
+        self._command_button(self.win2, "Remove", lambda: self.delete_appointment(),220)
+        self._exit_button(self.win2,220)
         self.win2.mainloop()
 
     def add_administeredTest(self):
@@ -231,27 +231,27 @@ class AsistentFrame(TitleFrame):
 
     def remove_administeredTest(self):
 
-        self.win2 = self._popup_window("Remove Administered Test")
+        self.win2 = self._popup_window("Remove Administered Test","500x300")
 
-        self._popup_labelframe(1, "Choose the administrated test", 25)
+        self._popup_labelframe(0, "Choose the administrated test", 25)
 
         self.nume_test_remove = ttk.Combobox(self.win2, values=self._get_tests())
-        self.nume_test_remove.grid(column=0, row=2)
+        self.nume_test_remove.grid(column=0, row=1)
         self.nume_test_remove.current(1)
 
-        cnp_remove_frame = self._popup_labelframe(3, "Pacient CNP", self.popup_width_label)
+        cnp_remove_frame = self._popup_labelframe(2, "Pacient CNP", self.popup_width_label)
         self.cnp_remove = tk.Entry(cnp_remove_frame)
         self.cnp_remove.grid(row=0, column=1, padx=5, pady=10)
 
-        self._command_button(self.win2, "Remove", lambda: self.delete_adminstered_test())
-        self._exit_button(self.win2)
+        self._command_button(self.win2, "Remove", lambda: self.delete_adminstered_test(),220)
+        self._exit_button(self.win2,220)
         self.win2.mainloop()
 
     def add_payment(self):
 
         self.win2 = self._popup_window("Add Payment")
 
-        self._popup_labelframe(1, "Payment Date", self.popup_width_label)
+        self._popup_labelframe(0, "Payment Date", self.popup_width_label)
         now = datetime.now()
         self.data_plata_insert = Calendar(
             self.win2,
@@ -265,13 +265,13 @@ class AsistentFrame(TitleFrame):
             mindate=now,
             date_pattern="dd.mm.y",
         )
-        self.data_plata_insert.grid(row=2, column=0, padx=5, pady=5)
+        self.data_plata_insert.grid(row=1, column=0, padx=5, pady=5)
 
-        total_plata_insert_frame = self._popup_labelframe(3, "Total Payment", self.popup_width_label)
+        total_plata_insert_frame = self._popup_labelframe(2, "Total Payment", self.popup_width_label)
         self.total_plata_insert = tk.Entry(total_plata_insert_frame)
         self.total_plata_insert.grid(row=0, column=1, padx=5, pady=5)
 
-        cnp_insert_frame = self._popup_labelframe(5, "Pacient CNP", self.popup_width_label)
+        cnp_insert_frame = self._popup_labelframe(3, "Pacient CNP", self.popup_width_label)
         self.cnp_insert = tk.Entry(cnp_insert_frame)
         self.cnp_insert.grid(row=0, column=1, padx=5, pady=5)
 
@@ -281,7 +281,7 @@ class AsistentFrame(TitleFrame):
 
     def update_payment(self):
 
-        self.win2 = self._popup_window("Update Payment")
+        self.win2 = self._popup_window("Update Payment","500x300")
 
         id_plata_update_frame = self._popup_labelframe(0, "Payment ID", self.popup_width_label)
         self.id_plata_update = tk.Entry(id_plata_update_frame)
@@ -295,13 +295,13 @@ class AsistentFrame(TitleFrame):
         self.cnp_update = tk.Entry(cnp_update_frame)
         self.cnp_update.grid(row=0, column=1, padx=5, pady=5)
 
-        self._command_button(self.win2, "Update", lambda: self.update_Payment())
-        self._exit_button(self.win2)
+        self._command_button(self.win2, "Update", lambda: self.update_Payment(),220)
+        self._exit_button(self.win2,220)
         self.win2.mainloop()
 
     def remove_payment(self):
 
-        self.win2 = self._popup_window("Remove Payment")
+        self.win2 = self._popup_window("Remove Payment","500x300")
 
         id_plata_remove_frame = self._popup_labelframe(0, "Payment ID", self.popup_width_label)
         self.id_plata_remove = tk.Entry(id_plata_remove_frame)
@@ -311,8 +311,8 @@ class AsistentFrame(TitleFrame):
         self.cnp_remove = tk.Entry(cnp_remove_frame)
         self.cnp_remove.grid(row=0, column=1, padx=5, pady=10)
 
-        self._command_button(self.win2, "Remove", lambda: self.delete_payment())
-        self._exit_button(self.win2)
+        self._command_button(self.win2, "Remove", lambda: self.delete_payment(),220)
+        self._exit_button(self.win2,220)
         self.win2.mainloop()
 
     def _popup_labelframe(self, row, title, width_label):
