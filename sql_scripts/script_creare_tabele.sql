@@ -165,7 +165,6 @@ CREATE TABLE programari (
     id_asistent      NUMBER(6) NOT NULL
 )
 LOGGING;
-
 ALTER TABLE programari ADD CONSTRAINT programari_pk PRIMARY KEY ( id_programare );
 
 CREATE TABLE teste (
@@ -287,7 +286,7 @@ END;
 /
 
 CREATE OR REPLACE TRIGGER trg_data_prelucrare 
-    BEFORE INSERT OR UPDATE ON Teste_Efectuate 
+    BEFORE INSERT ON Teste_Efectuate 
     FOR EACH ROW 
 BEGIN
     IF(trunc(:new.data_prelucrare) < trunc(SYSDATE))
@@ -298,7 +297,7 @@ END;
 /
 
 CREATE OR REPLACE TRIGGER trg_data_recoltare 
-    BEFORE INSERT OR UPDATE ON Teste_Efectuate 
+    BEFORE INSERT ON Teste_Efectuate 
     FOR EACH ROW 
 BEGIN
     IF(trunc(:new.data_recoltare) != trunc(SYSDATE))
@@ -309,7 +308,7 @@ END;
 /
 
 CREATE OR REPLACE TRIGGER trg_data_validare 
-    BEFORE INSERT OR UPDATE ON Buletine_teste 
+    BEFORE INSERT ON Buletine_teste 
     FOR EACH ROW 
 BEGIN
     IF(trunc(:new.data_validare) < trunc(SYSDATE))

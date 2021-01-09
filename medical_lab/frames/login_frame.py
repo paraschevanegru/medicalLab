@@ -69,6 +69,7 @@ class LoginFrame(TitleFrame):
         else:
             if user_level == "laborant":
                 self.controller.frames["LaborantFrame"].main_frame_welcome_label_var.set(f"Welcome {user_name}")
+                self.controller.frames["LaborantFrame"].employee_code.set(employee_code)
                 self.controller.render_frame("LaborantFrame")
             if user_level == "asistent":
                 self.controller.frames["AsistentFrame"].main_frame_welcome_label_var.set(f"Welcome {user_name}")

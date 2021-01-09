@@ -84,7 +84,7 @@ class AsistentFrame(TitleFrame):
         self._dashboard_button("Add appointment", lambda: self.add_appointment(), 6)
         self._dashboard_button("Remove appointment", lambda: self.remove_appointment(), 7)
         self._dashboard_button("Update appointment", lambda: self.update_appointment(), 8)
-        self._dashboard_button("View administered tests", lambda: self.populate_table_administrated_tests(), 9, (30, 5))
+        self._dashboard_button("View administered tests", lambda: self.populate_table_adminstered_tests(), 9, (30, 5))
         self._dashboard_button("Add administered test", lambda: self.add_administeredTest(), 10)
 
         self._dashboard_button("Remove administered test", lambda: self.remove_administeredTest(), 11)
@@ -107,16 +107,16 @@ class AsistentFrame(TitleFrame):
         if messagebox.askokcancel("Logout", "Are you sure you want to logout?"):
             self.controller.render_frame("LoginFrame")
 
-    def _popup_window(self):
+    def _popup_window(self, title):
         win2 = tk.Toplevel()
-        win2.title("Add Appointment")
+        win2.title(title)
         win2.geometry("500x500")
         win2.resizable(0, 0)
         win2.config(bg="gray97")
         return win2
 
     def add_appointment(self):
-        self.win2 = self._popup_window()
+        self.win2 = self._popup_window("Add Appointment")
 
         cod_programare_insert_frame = self._popup_labelframe(0, "Appointment Code", self.popup_width_label)
         self.cod_programare_insert = tk.Entry(cod_programare_insert_frame)
@@ -148,7 +148,7 @@ class AsistentFrame(TitleFrame):
 
     def update_appointment(self):
 
-        self.win2 = self._popup_window()
+        self.win2 = self._popup_window("Update Appointment")
 
         cod_programare_update_frame = self._popup_labelframe(0, "Appointment Code", self.popup_width_label)
         self.cod_programare_update = tk.Entry(cod_programare_update_frame)
@@ -180,7 +180,7 @@ class AsistentFrame(TitleFrame):
 
     def remove_appointment(self):
 
-        self.win2 = self._popup_window()
+        self.win2 = self._popup_window("Remove Appointment")
 
         cod_programare_remove_frame = self._popup_labelframe(0, "Appointment Code", self.popup_width_label)
         self.cod_programare_remove = tk.Entry(cod_programare_remove_frame)
@@ -196,7 +196,7 @@ class AsistentFrame(TitleFrame):
 
     def add_administeredTest(self):
 
-        self.win2 = self._popup_window()
+        self.win2 = self._popup_window("Add Adminstered Test")
 
         self._popup_labelframe(1, "Choose the administrated test", 25)
 
@@ -231,7 +231,7 @@ class AsistentFrame(TitleFrame):
 
     def remove_administeredTest(self):
 
-        self.win2 = self._popup_window()
+        self.win2 = self._popup_window("Remove Administered Test")
 
         self._popup_labelframe(1, "Choose the administrated test", 25)
 
@@ -243,13 +243,13 @@ class AsistentFrame(TitleFrame):
         self.cnp_remove = tk.Entry(cnp_remove_frame)
         self.cnp_remove.grid(row=0, column=1, padx=5, pady=10)
 
-        self._command_button(self.win2, "Remove", lambda: self.delete_administrated_test())
+        self._command_button(self.win2, "Remove", lambda: self.delete_adminstered_test())
         self._exit_button(self.win2)
         self.win2.mainloop()
 
     def add_payment(self):
 
-        self.win2 = self._popup_window()
+        self.win2 = self._popup_window("Add Payment")
 
         self._popup_labelframe(1, "Payment Date", self.popup_width_label)
         now = datetime.now()
@@ -281,7 +281,7 @@ class AsistentFrame(TitleFrame):
 
     def update_payment(self):
 
-        self.win2 = self._popup_window()
+        self.win2 = self._popup_window("Update Payment")
 
         id_plata_update_frame = self._popup_labelframe(0, "Payment ID", self.popup_width_label)
         self.id_plata_update = tk.Entry(id_plata_update_frame)
@@ -301,7 +301,7 @@ class AsistentFrame(TitleFrame):
 
     def remove_payment(self):
 
-        self.win2 = self._popup_window()
+        self.win2 = self._popup_window("Remove Payment")
 
         id_plata_remove_frame = self._popup_labelframe(0, "Payment ID", self.popup_width_label)
         self.id_plata_remove = tk.Entry(id_plata_remove_frame)
@@ -483,7 +483,7 @@ class AsistentFrame(TitleFrame):
         self.controller.run_query(query_delete)
         self.populate_table_payments()
 
-    def populate_table_administrated_tests(self):
+    def populate_table_adminstered_tests(self):
         if self.table:
             self.table.clear_table()
             self.table.destroy()
@@ -508,7 +508,7 @@ class AsistentFrame(TitleFrame):
         for row in query_select:
             self.table.insert("", "end", values=row)
 
-    def insert_administrated_test(self):
+    def insert_adminstered_test(self):
         if not self.data_recoltare_insert:
             return
         if not self.nume_test_insert:
@@ -519,12 +519,12 @@ class AsistentFrame(TitleFrame):
         id_asistent = self._return_id("asistenti", "asistent", "cod_asistent", self.employee_code.get())
         id_laborant = self._return_id("laboranti", "laborant", "cod_laborant", "0")
         id_test = self._return_id("teste", "test", "nume_test", self.nume_test_insert.get())
-        query_administrated_test = f"INSERT INTO teste_efectuate VALUES (NULL, TO_DATE('{self.data_recoltare_insert.get_date()}', 'DD.MM.YYYY'), NULL, {id_pacient}, {id_asistent}, {id_laborant}, {id_test})"
+        query_adminstered_test = f"INSERT INTO teste_efectuate VALUES (NULL, TO_DATE('{self.data_recoltare_insert.get_date()}', 'DD.MM.YYYY'), NULL, {id_pacient}, {id_asistent}, {id_laborant}, {id_test})"
 
-        self.controller.run_query(query_administrated_test)
-        self.populate_table_administrated_tests()
+        self.controller.run_query(query_adminstered_test)
+        self.populate_table_adminstered_tests()
 
-    def delete_administrated_test(self):
+    def delete_adminstered_test(self):
         if not self.table.is_item_selected():
             messagebox.showinfo("Delete Error", "Item not selected")
             return
@@ -532,4 +532,4 @@ class AsistentFrame(TitleFrame):
         id_test = self._return_id("teste", "test", "nume_test", self.nume_test_remove.get())
         query_delete = f"DELETE FROM teste_efectuate WHERE id_test='{id_test}' AND id_pacient={id_pacient}"
         self.controller.run_query(query_delete)
-        self.populate_table_administrated_tests()
+        self.populate_table_adminstered_tests()
