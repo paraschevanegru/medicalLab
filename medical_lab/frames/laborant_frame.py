@@ -61,7 +61,7 @@ class LaborantFrame(TitleFrame):
         self.search_button.grid(row=0, column=6, padx=5, pady=10)
         self.base_frame = laborant_frame
         self.table = None
-        self.populate_table_bulletin_test()
+        self.populate_table_test_bulletin()
 
     def init_dashboard(self, parent):
 
@@ -76,13 +76,13 @@ class LaborantFrame(TitleFrame):
             fg="#99CCFF",
         ).grid(row=0, column=0, padx=10, pady=15)
 
-        self._dashboard_button("View tests bulletin", lambda: self.populate_table_bulletin_test(), 1, (30, 5))
+        self._dashboard_button("View tests bulletin", lambda: self.populate_table_test_bulletin(), 1, (30, 5))
         self._dashboard_button("Add test bulletin", lambda: self.add_testBulletin(), 2)
         self._dashboard_button("Remove test bulletin", lambda: self.remove_testBulletin(), 3)
         self._dashboard_button("Update Test bulletin", lambda: self.update_testBulletin(), 4)
-        self._dashboard_button("View administered tests", lambda: self.populate_table_administrated_tests(), 5, (30, 5))
+        self._dashboard_button("View administered tests", lambda: self.populate_table_adminstered_tests(), 5, (30, 5))
         self._dashboard_button("Update administrated test", lambda: self.update_administeredTest(), 6)
-        self._dashboard_button("Remove administrated test", lambda: self.remove_administratedtest(), 7)
+        self._dashboard_button("Remove administrated test", lambda: self.remove_adminsteredtest(), 7)
 
     def _dashboard_button(self, title, command, row, pady=5):
         tk.Button(
@@ -102,9 +102,9 @@ class LaborantFrame(TitleFrame):
         if messagebox.askokcancel("Logout", "Are you sure you want to logout?"):
             self.controller.render_frame("LoginFrame")
 
-    def _popup_window(self):
+    def _popup_window(self, title):
         win2 = tk.Toplevel()
-        win2.title("Add Appointment")
+        win2.title(title)
         win2.geometry("500x500")
         win2.resizable(0, 0)
         win2.config(bg="gray97")
@@ -112,9 +112,9 @@ class LaborantFrame(TitleFrame):
 
     def update_administeredTest(self):
 
-        self.win2 = self._popup_window()
+        self.win2 = self._popup_window("Update Administered Test")
 
-        id_test_efec_update_frame = self._popup_labelframe(0, "Administrated Test ID", 25)
+        id_test_efec_update_frame = self._popup_labelframe(0, "Administered Test ID", 25)
         self.id_test_efec_update = tk.Entry(id_test_efec_update_frame)
         self.id_test_efec_update.grid(row=0, column=1, padx=5, pady=5)
 
@@ -139,14 +139,14 @@ class LaborantFrame(TitleFrame):
         self.cnp_update = tk.Entry(cnp_update_frame)
         self.cnp_update.grid(row=0, column=1, padx=5, pady=10)
 
-        self._command_button(self.win2, "Update", lambda: self.update_administrated_test())
+        self._command_button(self.win2, "Update", lambda: self.update_adminstered_test())
         self._exit_button(self.win2)
 
         self.win2.mainloop()
 
-    def remove_administratedtest(self):
+    def remove_adminsteredtest(self):
 
-        self.win2 = self._popup_window()
+        self.win2 = self._popup_window("Remove Administered Test")
 
         cod_programare_remove_frame = self._popup_labelframe(0, "Appointment Code", self.popup_width_label)
         self.cod_programare_remove = tk.Entry(cod_programare_remove_frame)
@@ -170,9 +170,13 @@ class LaborantFrame(TitleFrame):
 
     def add_testBulletin(self):
 
-        self.win2 = self._popup_window()
+        self.win2 = self._popup_window("Add Test Bulletin")
 
-        self._popup_labelframe(0, "Validation Date", self.popup_width_label)
+        id_test_efec_insert_frame = self._popup_labelframe(0, "Adminstered Test ID", 25)
+        self.id_test_efec_insert = tk.Entry(id_test_efec_insert_frame)
+        self.id_test_efec_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        self._popup_labelframe(1, "Validation Date", self.popup_width_label)
         now = datetime.now()
         self.validation_date_insert = Calendar(
             self.win2,
@@ -187,13 +191,13 @@ class LaborantFrame(TitleFrame):
             maxdate=now,
             date_pattern="dd.mm.y",
         )
-        self.validation_date_insert.grid(row=1, column=0, padx=5, pady=10)
+        self.validation_date_insert.grid(row=2, column=0, padx=5, pady=10)
 
-        result_insert_frame = self._popup_labelframe(2, "Result ", self.popup_width_label)
+        result_insert_frame = self._popup_labelframe(3, "Result ", self.popup_width_label)
         self.result_insert = tk.Entry(result_insert_frame)
         self.result_insert.grid(row=0, column=1, padx=5, pady=10)
 
-        cnp_insert_frame = self._popup_labelframe(3, "Pacient CNP", self.popup_width_label)
+        cnp_insert_frame = self._popup_labelframe(4, "Pacient CNP", self.popup_width_label)
         self.cnp_insert = tk.Entry(cnp_insert_frame)
         self.cnp_insert.grid(row=0, column=1, padx=5, pady=10)
 
@@ -203,7 +207,7 @@ class LaborantFrame(TitleFrame):
 
     def update_testBulletin(self):
 
-        self.win2 = self._popup_window()
+        self.win2 = self._popup_window("Update Test Bulletin")
 
         cod_programare_update_frame = self._popup_labelframe(0, "Appointment Code", self.popup_width_label)
         self.cod_programare_update = tk.Entry(cod_programare_update_frame)
@@ -227,7 +231,7 @@ class LaborantFrame(TitleFrame):
 
     def remove_testBulletin(self):
 
-        self.win2 = self._popup_window()
+        self.win2 = self._popup_window("Remove Test Bulletin")
 
         cod_programare_remove_frame = self._popup_labelframe(0, "Appointment Code", self.popup_width_label)
         self.cod_programare_remove = tk.Entry(cod_programare_remove_frame)
@@ -308,7 +312,7 @@ class LaborantFrame(TitleFrame):
         flatten = [item for sublist in result for item in sublist]
         return flatten
 
-    def populate_table_administrated_tests(self):
+    def populate_table_adminstered_tests(self):
         if self.table:
             self.table.clear_table()
             self.table.destroy()
@@ -340,14 +344,11 @@ class LaborantFrame(TitleFrame):
             return
         if not self.validation_date_insert:
             return
-        id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_insert.get())
-        query_id_test_efectuat = f"SELECT t.id_test_efectuat FROM teste_efectuate t, pacienti p WHERE p.cnp = '{id_pacient}' AND t.id_pacient = p.id_pacient"
-        id_test_efectuat = self.controller.run_query(query_id_test_efectuat)
-        query_test_bulletin = f"INSERT INTO buletine_teste VALUES (NULL, TO_DATE('{self.validation_date_insert.get_date()}', 'DD.MM.YYYY'),'{self.result_insert.get()}','{id_test_efectuat}' )"
+        query_test_bulletin = f"INSERT INTO buletine_teste VALUES (NULL, TO_DATE('{self.validation_date_insert.get_date()}', 'DD.MM.YYYY'),'{self.result_insert.get()}','{self.id_test_efec_insert.get()}' )"
         self.controller.run_query(query_test_bulletin)
         self.populate_table_test_bulletin()
 
-    def update_administrated_test(self):
+    def update_adminstered_test(self):
         if not self.data_prelucrare_update:
             return
         if not self.id_test_efec_update:
@@ -356,12 +357,12 @@ class LaborantFrame(TitleFrame):
             return
         id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_update.get())
         id_laborant = self._return_id("laboranti", "laborant", "cod_laborant", self.employee_code.get())
-        query_administrated_test = f"UPDATE teste_efectuate SET data_prelucrare = TO_DATE('{self.data_prelucrare_update.get_date()}', 'DD.MM.YYYY'), id_laborant='{id_laborant}' WHERE id_pacient='{id_pacient}' AND id_test_efectuat='{self.id_test_efec_update.get()}'"
+        query_adminstered_test = f"UPDATE teste_efectuate SET data_prelucrare = TO_DATE('{self.data_prelucrare_update.get_date()}', 'DD.MM.YYYY'), id_laborant='{id_laborant}' WHERE id_pacient='{id_pacient}' AND id_test_efectuat='{self.id_test_efec_update.get()}'"
 
-        self.controller.run_query(query_administrated_test)
-        self.populate_table_administrated_tests()
+        self.controller.run_query(query_adminstered_test)
+        self.populate_table_adminstered_tests()
 
-    def populate_table_bulletin_test(self):
+    def populate_table_test_bulletin(self):
         if self.table:
             self.table.clear_table()
             self.table.destroy()
