@@ -1,3 +1,4 @@
+import re
 from tkinter import messagebox
 from medical_lab.frames.table_frame import TableFrame
 import tkinter as tk
@@ -76,18 +77,19 @@ class AsistentFrame(TitleFrame):
             bg="gray97",
             fg="#99CCFF",
         ).grid(row=0, column=0, padx=10, pady=15)
-        self._dashboard_button("View payments", lambda: self.populate_table_payments(), 1, (5, 5))
-        self._dashboard_button("Add payment", lambda: self.add_payment(), 2, 0)
-        self._dashboard_button("Remove payment", lambda: self.remove_payment(), 3)
-        self._dashboard_button("Update payment", lambda: self.update_payment(), 4)
-        self._dashboard_button("View appointments", lambda: self.populate_table_appointments(), 5, (30, 5))
-        self._dashboard_button("Add appointment", lambda: self.add_appointment(), 6)
-        self._dashboard_button("Remove appointment", lambda: self.remove_appointment(), 7)
-        self._dashboard_button("Update appointment", lambda: self.update_appointment(), 8)
-        self._dashboard_button("View administered tests", lambda: self.populate_table_adminstered_tests(), 9, (30, 5))
-        self._dashboard_button("Add administered test", lambda: self.add_administeredTest(), 10)
+        self._dashboard_button("Add Pacient", lambda: self.add_pacient(), 1, (15, 5))
+        self._dashboard_button("View payments", lambda: self.populate_table_payments(), 2)
+        self._dashboard_button("Add payment", lambda: self.add_payment(), 3, 0)
+        self._dashboard_button("Remove payment", lambda: self.remove_payment(), 4)
+        self._dashboard_button("Update payment", lambda: self.update_payment(), 5)
+        self._dashboard_button("View appointments", lambda: self.populate_table_appointments(), 6, (30, 5))
+        self._dashboard_button("Add appointment", lambda: self.add_appointment(), 7)
+        self._dashboard_button("Remove appointment", lambda: self.remove_appointment(), 8)
+        self._dashboard_button("Update appointment", lambda: self.update_appointment(), 9)
+        self._dashboard_button("View administered tests", lambda: self.populate_table_adminstered_tests(), 10, (30, 5))
+        self._dashboard_button("Add administered test", lambda: self.add_administeredTest(), 11)
 
-        self._dashboard_button("Remove administered test", lambda: self.remove_administeredTest(), 11)
+        self._dashboard_button("Remove administered test", lambda: self.remove_administeredTest(), 12)
 
     def _dashboard_button(self, title, command, row, pady=5):
         tk.Button(
@@ -116,6 +118,46 @@ class AsistentFrame(TitleFrame):
         win2.resizable(0, 0)
         win2.config(bg="gray97")
         return win2
+
+    def add_pacient(self):
+        self.win2 = self._popup_window("Add Pacient", "900x650")
+
+        nume_paceint_insert_frame = self._popup_labelframe(0, "Pacient Name ", self.popup_width_label)
+        self.nume_paceint_insert = tk.Entry(nume_paceint_insert_frame)
+        self.nume_paceint_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        cnp_insert_frame = self._popup_labelframe(1, "Pacient CNP ", self.popup_width_label)
+        self.cnp_insert = tk.Entry(cnp_insert_frame)
+        self.cnp_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        self._popup_labelframe(2, "Birth Date", self.popup_width_label)
+        now = datetime.now()
+        self.data_nastere_insert = Calendar(
+            self.win2,
+            font="Helvetica",
+            selectmode="day",
+            locale="en_US",
+            cursor="hand1",
+            year=now.year,
+            month=now.month,
+            day=now.day,
+            date_pattern="dd.mm.y",
+        )
+        self.data_nastere_insert.grid(row=3, column=0, pady=20, padx=80, sticky="w")
+
+        telefon_insert_frame = self._popup_labelframe(4, "Phone ", self.popup_width_label)
+        self.telefon_insert = tk.Entry(telefon_insert_frame)
+        self.telefon_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        email_frame = self._popup_labelframe(5, "Email ", self.popup_width_label)
+        self.email_insert = tk.Entry(email_frame)
+        self.email_insert.grid(row=0, column=1, padx=5, pady=10)
+
+        self._command_button(self.win2, "Insert", lambda: self.insert_pacient(), 600)
+        self._exit_button(self.win2, 600)
+        self.table_pacients = None
+        self.populate_table_pacients()
+        self.win2.mainloop()
 
     def add_appointment(self):
         self.win2 = self._popup_window("Add Appointment")
@@ -393,6 +435,68 @@ class AsistentFrame(TitleFrame):
         result = self.controller.run_query(query_select)
         flatten = [item for sublist in result for item in sublist]
         return flatten
+
+    def check_cnp(self, value):
+        if len(value) == 13 and value[1] in [1, 2, 5, 6]:
+            pass
+        else:
+            messagebox.showinfo("OK", "Wrong CNP")
+
+    def check_phone(self, value):
+        if len(value) == 10 and value[1] == 0 and value[2] in [2, 3, 7]:
+            pass
+        else:
+            messagebox.showinfo("OK", "Wrong PHONE")
+
+    def check_email(self, value):
+        if bool(re.match(r"[a-z0-9._%-]+@[a-z0-9._%-]+\.[a-z]{2,4}", value)):
+            pass
+        else:
+            messagebox.showinfo("OK", "Wrong EMAIL")
+
+    def check_name(self, value):
+        if bool(re.match(r"^[a-zA-Z .''-]+$", value)):
+            pass
+        else:
+            messagebox.showinfo("OK", "Wrong NAME")
+
+    def insert_pacient(self):
+        if not self.nume_paceint_insert:
+            return
+        else:
+            self.check_name(self.nume_paceint_insert.get())
+        if not self.cnp_insert:
+            return
+        else:
+            self.check_cnp(self.cnp_insert.get())
+        if not self.data_nastere_insert:
+            return
+        if not self.telefon_insert:
+            return
+        else:
+            self.check_phone(self.telefon_insert.get())
+        if not self.email_insert:
+            return
+        else:
+            self.check_email(self.email_insert.get())
+
+        query_insert = f"INSERT INTO pacienti VALUES(NULL,'{self.nume_paceint_insert.get()}','{self.cnp_insert.get()}',TO_DATE('{self.data_nastere_insert.get_date()}', 'DD.MM.YYYY'), '{self.telefon_insert.get()}', '{self.email_insert.get()}')"
+
+        self.controller.run_query(query_insert)
+        self.populate_table_pacients()
+
+    def populate_table_pacients(self):
+        if self.table_pacients:
+            self.table_pacients.clear_table()
+            self.table_pacients.destroy()
+        query_view = list(map("".join, self.controller.get_columns_name("pacienti")))
+
+        self.table_pacients = TableFrame(self.win2, query_view)
+        self.table_pacients.grid(row=0, column=1, columnspan=1, rowspan=7, sticky=tk.NSEW)
+        self.table_pacients.tree.bind("<<TreeviewSelect>>")
+        query_select = self.controller.run_query("""select * from pacienti""")
+        for row in query_select:
+            self.table_pacients.insert("", "end", values=row)
 
     def insert_appointment(self):
         if not self.cod_programare_insert:
