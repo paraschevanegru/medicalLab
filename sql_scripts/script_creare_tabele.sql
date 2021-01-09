@@ -187,7 +187,7 @@ ALTER TABLE teste ADD CONSTRAINT teste_nume_test_un UNIQUE ( nume_test );
 
 CREATE TABLE teste_efectuate (
     id_test_efectuat  NUMBER(6) NOT NULL,
-    data_recoltare    DATE NOT NULL,
+    data_recoltare    DATE,
     data_prelucrare   DATE,
     id_pacient        NUMBER(7) NOT NULL,
     id_asistent       NUMBER(6) NOT NULL,

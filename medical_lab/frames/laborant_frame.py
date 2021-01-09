@@ -17,6 +17,7 @@ class LaborantFrame(TitleFrame):
         self.bg_color = "gray97"
         self.btn_fg = "white"
         self.button_font = tkfont.Font(family="Helvetica", size=10)
+        self.popup_width_label = 18
 
         self.main_frame_welcome_label_var = tk.StringVar()
 
@@ -65,7 +66,6 @@ class LaborantFrame(TitleFrame):
 
         self.dashboard_frame = tk.Frame(parent, bg="gray97", bd=0)
         self.dashboard_frame.grid(row=0, column=0, rowspan=10, sticky=tk.NSEW)
-        # self.dashboard_frame.place(x=0, y=0, anchor="nw", width=225, height=650)
 
         tk.Label(
             self.dashboard_frame,
@@ -101,40 +101,27 @@ class LaborantFrame(TitleFrame):
         if messagebox.askokcancel("Logout", "Are you sure you want to logout?"):
             self.controller.render_frame("LoginFrame")
 
+    def _popup_window(self):
+        win2 = tk.Toplevel()
+        win2.title("Add Appointment")
+        win2.geometry("500x500")
+        win2.resizable(0, 0)
+        win2.config(bg="gray97")
+        return win2
+
     def add_administeredTest(self):
 
-        self.win2 = tk.Toplevel()
-        self.win2.title("Add Administered Test")
-        self.win2.geometry("500x500")
-        self.win2.resizable(0, 0)
-        self.win2.config(bg="gray97")
-        width_label = 15
+        self.win2 = self._popup_window()
 
-        nume_test_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        nume_test_insert_frame.grid(row=1, column=0, pady=15, padx=80, sticky="w")
-        tk.Label(
-            nume_test_insert_frame,
-            text="Choose the administered test ",
-            bg=nume_test_insert_frame["bg"],
-            fg="#4380FA",
-            width=30,
-        ).grid(row=0, column=0)
+        self._popup_labelframe(1, "Choose the administrated test", 25)
 
         self.nume_test_insert = ttk.Combobox(self.win2, values=self._get_tests())
         self.nume_test_insert.grid(column=0, row=2)
         self.nume_test_insert.current(1)
 
-        data_recoltare_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        data_recoltare_insert_frame.grid(row=3, column=0, pady=5, padx=80, sticky="w")
-        tk.Label(
-            data_recoltare_insert_frame,
-            text="Date Collecting Blood Sample",
-            bg=data_recoltare_insert_frame["bg"],
-            fg="#4380FA",
-            width=25,
-        ).grid(row=0, column=0)
+        self._popup_labelframe(3, "Date Processing Blood Sample", 25)
         now = datetime.now()
-        self.data_recoltare_insert = Calendar(
+        self.data_prelucrare_insert = Calendar(
             self.win2,
             font="Helvetica",
             selectmode="day",
@@ -147,122 +134,46 @@ class LaborantFrame(TitleFrame):
             maxdate=now,
             date_pattern="dd.mm.y",
         )
-        self.data_recoltare_insert.grid(row=4, column=0, padx=5, pady=10)
+        self.data_prelucrare_insert.grid(row=4, column=0, padx=5, pady=10)
 
-        cnp_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        cnp_insert_frame.grid(row=5, column=0, pady=5, padx=80, sticky="w")
-        tk.Label(
-            cnp_insert_frame, text="Pacient CNP ", bg=cnp_insert_frame["bg"], fg="#4380FA", width=width_label
-        ).grid(row=0, column=0)
+        cnp_insert_frame = self._popup_labelframe(5, "Pacient CNP", self.popup_width_label)
         self.cnp_insert = tk.Entry(cnp_insert_frame)
         self.cnp_insert.grid(row=0, column=1, padx=5, pady=10)
 
-        tk.Button(
-            self.win2,
-            text="Insert",
-            font=("Helvetica", 10),
-            bg="gray97",
-            fg="#4380FA",
-            relief="flat",
-            width=15,
-            height=2,
-            command=lambda: self.insert_administrated_test(),
-        ).place(x=80, y=450)
+        self._command_button(self.win2, "Insert", lambda: self.insert_administrated_test())
         self._exit_button(self.win2)
 
         self.win2.mainloop()
 
     def remove_administratedtest(self):
 
-        self.win2 = tk.Toplevel()
-        self.win2.title("Remove Administered Test")
-        self.win2.geometry("500x500")
-        self.win2.resizable(0, 0)
-        self.win2.config(bg="gray97")
-        width_label = 18
+        self.win2 = self._popup_window()
 
-        cod_programare_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        cod_programare_insert_frame.grid(row=0, column=0, pady=20, padx=80, sticky="w")
-        tk.Label(
-            cod_programare_insert_frame,
-            text="Validation ",
-            bg=cod_programare_insert_frame["bg"],
-            fg="#4380FA",
-            width=width_label,
-        ).grid(row=0, column=0)
-        self.cod_programare_insert = tk.Entry(cod_programare_insert_frame)
-        self.cod_programare_insert.grid(row=0, column=1, padx=5, pady=10)
+        cod_programare_remove_frame = self._popup_labelframe(0, "Appointment Code", self.popup_width_label)
+        self.cod_programare_remove = tk.Entry(cod_programare_remove_frame)
+        self.cod_programare_remove.grid(row=0, column=1, padx=5, pady=10)
 
-        data_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        data_insert_frame.grid(row=1, column=0, pady=20, padx=80, sticky="w")
-        tk.Label(
-            data_insert_frame, text="Appointment Date ", bg=data_insert_frame["bg"], fg="#4380FA", width=width_label
-        ).grid(row=0, column=0)
-        self.data_prog_insert = tk.Entry(data_insert_frame)
-        self.data_prog_insert.grid(row=0, column=1, padx=5, pady=10)
+        data_remove_frame = self._popup_labelframe(1, "Appointment Date", self.popup_width_label)
+        self.data_prog_remove = tk.Entry(data_remove_frame)
+        self.data_prog_remove.grid(row=0, column=1, padx=5, pady=10)
 
-        nume_pacient_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        nume_pacient_insert_frame.grid(row=2, column=0, pady=20, padx=80, sticky="w")
-        tk.Label(
-            nume_pacient_insert_frame,
-            text="Pacient Name ",
-            bg=nume_pacient_insert_frame["bg"],
-            fg="#4380FA",
-            width=width_label,
-        ).grid(row=0, column=0)
-        self.nume_pacient_insert = tk.Entry(nume_pacient_insert_frame)
+        nume_pacient_remove_frame = self._popup_labelframe(2, "Pacient Name", self.popup_width_label)
+        self.nume_pacient_insert = tk.Entry(nume_pacient_remove_frame)
         self.nume_pacient_insert.grid(row=0, column=1, padx=5, pady=10)
 
-        cnp_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        cnp_insert_frame.grid(row=3, column=0, pady=20, padx=80, sticky="w")
-        tk.Label(
-            cnp_insert_frame, text="Pacient CNP ", bg=cnp_insert_frame["bg"], fg="#4380FA", width=width_label
-        ).grid(row=0, column=0)
-        self.cnp_insert = tk.Entry(cnp_insert_frame)
-        self.cnp_insert.grid(row=0, column=1, padx=5, pady=10)
+        cnp_remove_frame = self._popup_labelframe(3, "Pacient CNP", self.popup_width_label)
+        self.cnp_remove = tk.Entry(cnp_remove_frame)
+        self.cnp_remove.grid(row=0, column=1, padx=5, pady=10)
 
-        tk.Button(
-            self.win2,
-            text="Remove",
-            font=("Helvetica", 10),
-            bg="gray97",
-            fg="#4380FA",
-            relief="flat",
-            width=15,
-            height=2,
-            command=self.Quit,
-        ).place(x=80, y=450)
+        self._command_button(self.win2, "Remove", lambda: self.Quit)
         self._exit_button(self.win2)
         self.win2.mainloop()
 
     def add_testBulletin(self):
 
-        self.win2 = tk.Toplevel()
-        self.win2.title("Add Test Bulletin")
-        self.win2.geometry("500x500")
-        self.win2.resizable(0, 0)
-        self.win2.config(bg="gray97")
-        width_label = 18
+        self.win2 = self._popup_window()
 
-        # cod_programare_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        # cod_programare_insert_frame.grid(row=0, column=0, pady=20, padx=80, sticky="w")
-        # tk.Label(
-        #     cod_programare_insert_frame,
-        #     text="Validation Date ",
-        #     bg=cod_programare_insert_frame["bg"],
-        #     fg="#4380FA",
-        #     width=width_label,
-        # ).grid(row=0, column=0)
-        # self.cod_programare_insert = tk.Entry(cod_programare_insert_frame)
-        test_bulletin_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        test_bulletin_insert_frame.grid(row=1, column=0, pady=5, padx=80, sticky="w")
-        tk.Label(
-            test_bulletin_insert_frame,
-            text="Validation Date",
-            bg=test_bulletin_insert_frame["bg"],
-            fg="#4380FA",
-            width=25,
-        ).grid(row=0, column=0)
+        self._popup_labelframe(0, "Validation Date", self.popup_width_label)
         now = datetime.now()
         self.validation_date_insert = Calendar(
             self.win2,
@@ -277,153 +188,79 @@ class LaborantFrame(TitleFrame):
             maxdate=now,
             date_pattern="dd.mm.y",
         )
-        self.validation_date_insert.grid(row=2, column=0, padx=5, pady=10)
+        self.validation_date_insert.grid(row=1, column=0, padx=5, pady=10)
 
-        data_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        data_insert_frame.grid(row=3, column=0, pady=20, padx=80, sticky="w")
-        tk.Label(data_insert_frame, text="Result ", bg=data_insert_frame["bg"], fg="#4380FA", width=width_label).grid(
-            row=0, column=0
-        )
-        self.result_insert = tk.Entry(data_insert_frame)
+        result_insert_frame = self._popup_labelframe(2, "Result ", self.popup_width_label)
+        self.result_insert = tk.Entry(result_insert_frame)
         self.result_insert.grid(row=0, column=1, padx=5, pady=10)
 
-        cnp_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        cnp_insert_frame.grid(row=4, column=0, pady=20, padx=80, sticky="w")
-        tk.Label(
-            cnp_insert_frame, text="Pacient CNP ", bg=cnp_insert_frame["bg"], fg="#4380FA", width=width_label
-        ).grid(row=0, column=0)
+        cnp_insert_frame = self._popup_labelframe(3, "Pacient CNP", self.popup_width_label)
         self.cnp_insert = tk.Entry(cnp_insert_frame)
         self.cnp_insert.grid(row=0, column=1, padx=5, pady=10)
 
-        tk.Button(
-            self.win2,
-            text="Insert",
-            font=("Helvetica", 10),
-            bg="gray97",
-            fg="#4380FA",
-            relief="flat",
-            width=15,
-            height=2,
-            command=lambda: self.insert_test_bulletin(),
-        ).place(x=80, y=450)
+        self._command_button(self.win2, "Insert", lambda: self.insert_test_bulletin())
         self._exit_button(self.win2)
         self.win2.mainloop()
 
     def update_testBulletin(self):
 
-        self.win2 = tk.Toplevel()
-        self.win2.title("Update Test Bulletin")
-        self.win2.geometry("500x500")
-        self.win2.resizable(0, 0)
-        self.win2.config(bg="gray97")
-        width_label = 18
+        self.win2 = self._popup_window()
 
-        cod_programare_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        cod_programare_insert_frame.grid(row=0, column=0, pady=20, padx=80, sticky="w")
-        tk.Label(
-            cod_programare_insert_frame,
-            text="Appointment Code ",
-            bg=cod_programare_insert_frame["bg"],
-            fg="#4380FA",
-            width=width_label,
-        ).grid(row=0, column=0)
-        self.cod_programare_insert = tk.Entry(cod_programare_insert_frame)
-        self.cod_programare_insert.grid(row=0, column=1, padx=5, pady=10)
+        cod_programare_update_frame = self._popup_labelframe(0, "Appointment Code", self.popup_width_label)
+        self.cod_programare_update = tk.Entry(cod_programare_update_frame)
+        self.cod_programare_update.grid(row=0, column=1, padx=5, pady=10)
 
-        data_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        data_insert_frame.grid(row=1, column=0, pady=20, padx=80, sticky="w")
-        tk.Label(
-            data_insert_frame, text="Appointment Date ", bg=data_insert_frame["bg"], fg="#4380FA", width=width_label
-        ).grid(row=0, column=0)
-        self.data_prog_insert = tk.Entry(data_insert_frame)
-        self.data_prog_insert.grid(row=0, column=1, padx=5, pady=10)
+        data_update_frame = self._popup_labelframe(1, "Appointment Date", self.popup_width_label)
+        self.data_prog_update = tk.Entry(data_update_frame)
+        self.data_prog_update.grid(row=0, column=1, padx=5, pady=10)
 
-        nume_pacient_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        nume_pacient_insert_frame.grid(row=2, column=0, pady=20, padx=80, sticky="w")
-        tk.Label(
-            nume_pacient_insert_frame,
-            text="Pacient Name ",
-            bg=nume_pacient_insert_frame["bg"],
-            fg="#4380FA",
-            width=width_label,
-        ).grid(row=0, column=0)
-        self.nume_pacient_insert = tk.Entry(nume_pacient_insert_frame)
-        self.nume_pacient_insert.grid(row=0, column=1, padx=5, pady=10)
+        nume_pacient_update_frame = self._popup_labelframe(2, "Pacient Name", self.popup_width_label)
+        self.nume_pacient_update = tk.Entry(nume_pacient_update_frame)
+        self.nume_pacient_update.grid(row=0, column=1, padx=5, pady=10)
 
-        cnp_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        cnp_insert_frame.grid(row=3, column=0, pady=20, padx=80, sticky="w")
-        tk.Label(
-            cnp_insert_frame, text="Pacient CNP ", bg=cnp_insert_frame["bg"], fg="#4380FA", width=width_label
-        ).grid(row=0, column=0)
-        self.cnp_insert = tk.Entry(cnp_insert_frame)
-        self.cnp_insert.grid(row=0, column=1, padx=5, pady=10)
+        cnp_update_frame = self._popup_labelframe(3, "Pacient CNP", self.popup_width_label)
+        self.cnp_update = tk.Entry(cnp_update_frame)
+        self.cnp_update.grid(row=0, column=1, padx=5, pady=10)
 
-        tk.Button(
-            self.win2,
-            text="Update",
-            font=("Helvetica", 10),
-            bg="gray97",
-            fg="#4380FA",
-            relief="flat",
-            width=15,
-            height=2,
-            command=self.Quit,
-        ).place(x=80, y=450)
+        self._command_button(self.win2, "Update", lambda: self.Quit)
         self._exit_button(self.win2)
         self.win2.mainloop()
 
     def remove_testBulletin(self):
 
-        self.win2 = tk.Toplevel()
-        self.win2.title("Remove Bulletin Test")
-        self.win2.geometry("500x500")
-        self.win2.resizable(0, 0)
-        self.win2.config(bg="gray97")
-        width_label = 18
+        self.win2 = self._popup_window()
 
-        cod_programare_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        cod_programare_insert_frame.grid(row=0, column=0, pady=20, padx=80, sticky="w")
-        tk.Label(
-            cod_programare_insert_frame,
-            text="Appointment Code ",
-            bg=cod_programare_insert_frame["bg"],
-            fg="#4380FA",
-            width=width_label,
-        ).grid(row=0, column=0)
-        self.cod_programare_insert = tk.Entry(cod_programare_insert_frame)
-        self.cod_programare_insert.grid(row=0, column=1, padx=5, pady=10)
+        cod_programare_remove_frame = self._popup_labelframe(0, "Appointment Code", self.popup_width_label)
+        self.cod_programare_remove = tk.Entry(cod_programare_remove_frame)
+        self.cod_programare_remove.grid(row=0, column=1, padx=5, pady=10)
 
-        data_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        data_insert_frame.grid(row=1, column=0, pady=20, padx=80, sticky="w")
-        tk.Label(
-            data_insert_frame, text="Appointment Date ", bg=data_insert_frame["bg"], fg="#4380FA", width=width_label
-        ).grid(row=0, column=0)
-        self.data_prog_insert = tk.Entry(data_insert_frame)
-        self.data_prog_insert.grid(row=0, column=1, padx=5, pady=10)
+        data_remove_frame = self._popup_labelframe(1, "Appointment Date", self.popup_width_label)
+        self.data_prog_remove = tk.Entry(data_remove_frame)
+        self.data_prog_remove.grid(row=0, column=1, padx=5, pady=10)
 
-        nume_pacient_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        nume_pacient_insert_frame.grid(row=2, column=0, pady=20, padx=80, sticky="w")
-        tk.Label(
-            nume_pacient_insert_frame,
-            text="Pacient Name ",
-            bg=nume_pacient_insert_frame["bg"],
-            fg="#4380FA",
-            width=width_label,
-        ).grid(row=0, column=0)
-        self.nume_pacient_insert = tk.Entry(nume_pacient_insert_frame)
-        self.nume_pacient_insert.grid(row=0, column=1, padx=5, pady=10)
+        nume_pacient_remove_frame = self._popup_labelframe(2, "Pacient Name", self.popup_width_label)
+        self.nume_pacient_remove = tk.Entry(nume_pacient_remove_frame)
+        self.nume_pacient_remove.grid(row=0, column=1, padx=5, pady=10)
 
-        cnp_insert_frame = tk.LabelFrame(self.win2, bg="gray94")
-        cnp_insert_frame.grid(row=3, column=0, pady=20, padx=80, sticky="w")
-        tk.Label(
-            cnp_insert_frame, text="Pacient CNP ", bg=cnp_insert_frame["bg"], fg="#4380FA", width=width_label
-        ).grid(row=0, column=0)
-        self.cnp_insert = tk.Entry(cnp_insert_frame)
-        self.cnp_insert.grid(row=0, column=1, padx=5, pady=10)
+        cnp_remove_frame = self._popup_labelframe(3, "Pacient CNP", self.popup_width_label)
+        self.cnp_remove = tk.Entry(cnp_remove_frame)
+        self.cnp_remove.grid(row=0, column=1, padx=5, pady=10)
 
         self._command_button(self.win2, "Remove", lambda: self.Quit)
         self._exit_button(self.win2)
         self.win2.mainloop()
+
+    def _popup_labelframe(self, row, title, width_label):
+        label_frame = tk.LabelFrame(self.win2, bg="gray94")
+        label_frame.grid(row=row, column=0, pady=10, padx=80, sticky="w")
+        tk.Label(
+            label_frame,
+            text=title,
+            bg=label_frame["bg"],
+            fg="#4380FA",
+            width=width_label,
+        ).grid(row=0, column=0)
+        return label_frame
 
     def _command_button(self, window, title, command, y_axis=450):
         tk.Button(
@@ -472,51 +309,6 @@ class LaborantFrame(TitleFrame):
         flatten = [item for sublist in result for item in sublist]
         return flatten
 
-    def insert_appointment(self):
-        if not self.cod_programare_insert:
-            return
-        if not self.data_prog_insert:
-            return
-        if not self.cnp_insert:
-            return
-        id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_insert.get())
-        id_asistent = self._return_id("asistenti", "asistent", "cod_asistent", self.employee_code.get())
-        query_appointment = f"INSERT INTO programari VALUES (NULL, {self.cod_programare_insert.get()}, TO_DATE('{self.data_prog_insert.get_date()}', 'DD.MM.YYYY'), {id_pacient}, {id_asistent})"
-
-        self.controller.run_query(query_appointment)
-        self.populate_table_appointments()
-
-    def populate_table_payments(self):
-        if self.table:
-            self.table.clear_table()
-            self.table.destroy()
-        query_view = list(map("".join, self.controller.get_columns_name("plati")))[:4]
-        query_view.extend(list(map("".join, self.controller.get_columns_name("pacienti")))[1:3])
-
-        self.table = TableFrame(self.base_frame, query_view)
-        self.table.grid(row=1, column=1, columnspan=6, rowspan=9, sticky=tk.NSEW)
-        self.table.tree.bind("<<TreeviewSelect>>")
-        query_select = self.controller.run_query(
-            """select id_plata, data_plata, total_plata,moneda, nume_pacient,cnp 
-               from plati p, pacienti pa 
-               where p.id_pacient=pa.id_pacient"""
-        )
-        for row in query_select:
-            self.table.insert("", "end", values=row)
-
-    def insert_payment(self):
-        if not self.total_plata_insert:
-            return
-        if not self.data_plata_insert:
-            return
-        if not self.cnp_insert:
-            return
-        id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_insert.get())
-        query_payment = f"INSERT INTO plati VALUES (NULL, TO_DATE('{self.data_plata_insert.get_date()}', 'DD.MM.YYYY'), {self.total_plata_insert.get()}, DEFAULT,  {id_pacient})"
-
-        self.controller.run_query(query_payment)
-        self.populate_table_payments()
-
     def populate_table_administrated_tests(self):
         if self.table:
             self.table.clear_table()
@@ -524,7 +316,7 @@ class LaborantFrame(TitleFrame):
         query = list(map("".join, self.controller.get_columns_name("teste_efectuate")))[:1]
         query.extend(list(map("".join, self.controller.get_columns_name("tipuri_teste")))[1:2])
         query.extend(list(map("".join, self.controller.get_columns_name("teste")))[1:3])
-        query.extend(list(map("".join, self.controller.get_columns_name("teste_efectuate")))[1:2])
+        query.extend(list(map("".join, self.controller.get_columns_name("teste_efectuate")))[2:3])
         query.extend(list(map("".join, self.controller.get_columns_name("asistenti")))[1:2])
         query.extend(list(map("".join, self.controller.get_columns_name("pacienti")))[1:3])
 
@@ -532,7 +324,7 @@ class LaborantFrame(TitleFrame):
         self.table.grid(row=1, column=1, columnspan=6, rowspan=9, sticky=tk.NSEW)
         self.table.tree.bind("<<TreeviewSelect>>")
         query_select = self.controller.run_query(
-            """select id_test_efectuat,denumire_tip_test, nume_test, pret_test,data_recoltare, cod_asistent, nume_pacient,cnp 
+            """select id_test_efectuat,denumire_tip_test, nume_test, pret_test,data_prelucrare, cod_asistent, nume_pacient,cnp 
                 from teste_efectuate e, teste t, tipuri_teste ti, asistenti a, pacienti p 
                 where p.id_pacient=e.id_pacient 
                 and a.id_asistent=e.id_asistent 
@@ -557,7 +349,7 @@ class LaborantFrame(TitleFrame):
         self.populate_table_test_bulletin()
 
     def insert_administrated_test(self):
-        if not self.data_recoltare_insert:
+        if not self.data_prelucrare_insert:
             return
         if not self.nume_test_insert:
             return
@@ -567,7 +359,7 @@ class LaborantFrame(TitleFrame):
         id_asistent = self._return_id("asistenti", "asistent", "cod_asistent", self.employee_code.get())
         id_laborant = self._return_id("laboranti", "laborant", "cod_laborant", "0")
         id_test = self._return_id("teste", "test", "nume_test", self.nume_test_insert.get())
-        query_administrated_test = f"INSERT INTO teste_efectuate VALUES (NULL, TO_DATE('{self.data_recoltare_insert.get_date()}', 'DD.MM.YYYY'), NULL, {id_pacient}, {id_asistent},{id_laborant}, {id_test})"
+        query_administrated_test = f"INSERT INTO teste_efectuate VALUES (NULL, NULL, TO_DATE('{self.data_prelucrare_insert.get_date()}', 'DD.MM.YYYY'), {id_pacient}, {id_asistent},{id_laborant}, {id_test})"
 
         self.controller.run_query(query_administrated_test)
         self.populate_table_administrated_tests()
