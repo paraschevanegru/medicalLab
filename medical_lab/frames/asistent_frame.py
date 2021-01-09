@@ -102,12 +102,14 @@ class AsistentFrame(TitleFrame):
         ).grid(row=row, column=0, padx=35, pady=pady)
 
     def on_logout(self):
-        from tkinter import messagebox
-
         if messagebox.askokcancel("Logout", "Are you sure you want to logout?"):
+            if hasattr(self, "win2"):
+                self.win2.destroy()
             self.controller.render_frame("LoginFrame")
 
-    def _popup_window(self, title,dim="500x500"):
+    def _popup_window(self, title, dim="500x500"):
+        if hasattr(self, "win2"):
+            self.win2.destroy()
         win2 = tk.Toplevel()
         win2.title(title)
         win2.geometry(dim)
@@ -180,7 +182,7 @@ class AsistentFrame(TitleFrame):
 
     def remove_appointment(self):
 
-        self.win2 = self._popup_window("Remove Appointment","500x300")
+        self.win2 = self._popup_window("Remove Appointment", "500x300")
 
         cod_programare_remove_frame = self._popup_labelframe(0, "Appointment Code", self.popup_width_label)
         self.cod_programare_remove = tk.Entry(cod_programare_remove_frame)
@@ -190,8 +192,8 @@ class AsistentFrame(TitleFrame):
         self.cnp_remove = tk.Entry(cnp_remove_frame)
         self.cnp_remove.grid(row=0, column=1, padx=5, pady=10)
 
-        self._command_button(self.win2, "Remove", lambda: self.delete_appointment(),220)
-        self._exit_button(self.win2,220)
+        self._command_button(self.win2, "Remove", lambda: self.delete_appointment(), 220)
+        self._exit_button(self.win2, 220)
         self.win2.mainloop()
 
     def add_administeredTest(self):
@@ -231,7 +233,7 @@ class AsistentFrame(TitleFrame):
 
     def remove_administeredTest(self):
 
-        self.win2 = self._popup_window("Remove Administered Test","500x300")
+        self.win2 = self._popup_window("Remove Administered Test", "500x300")
 
         self._popup_labelframe(0, "Choose the administrated test", 25)
 
@@ -243,8 +245,8 @@ class AsistentFrame(TitleFrame):
         self.cnp_remove = tk.Entry(cnp_remove_frame)
         self.cnp_remove.grid(row=0, column=1, padx=5, pady=10)
 
-        self._command_button(self.win2, "Remove", lambda: self.delete_adminstered_test(),220)
-        self._exit_button(self.win2,220)
+        self._command_button(self.win2, "Remove", lambda: self.delete_adminstered_test(), 220)
+        self._exit_button(self.win2, 220)
         self.win2.mainloop()
 
     def add_payment(self):
@@ -281,7 +283,7 @@ class AsistentFrame(TitleFrame):
 
     def update_payment(self):
 
-        self.win2 = self._popup_window("Update Payment","500x300")
+        self.win2 = self._popup_window("Update Payment", "500x300")
 
         id_plata_update_frame = self._popup_labelframe(0, "Payment ID", self.popup_width_label)
         self.id_plata_update = tk.Entry(id_plata_update_frame)
@@ -295,13 +297,13 @@ class AsistentFrame(TitleFrame):
         self.cnp_update = tk.Entry(cnp_update_frame)
         self.cnp_update.grid(row=0, column=1, padx=5, pady=5)
 
-        self._command_button(self.win2, "Update", lambda: self.update_Payment(),220)
-        self._exit_button(self.win2,220)
+        self._command_button(self.win2, "Update", lambda: self.update_Payment(), 220)
+        self._exit_button(self.win2, 220)
         self.win2.mainloop()
 
     def remove_payment(self):
 
-        self.win2 = self._popup_window("Remove Payment","500x300")
+        self.win2 = self._popup_window("Remove Payment", "500x300")
 
         id_plata_remove_frame = self._popup_labelframe(0, "Payment ID", self.popup_width_label)
         self.id_plata_remove = tk.Entry(id_plata_remove_frame)
@@ -311,8 +313,8 @@ class AsistentFrame(TitleFrame):
         self.cnp_remove = tk.Entry(cnp_remove_frame)
         self.cnp_remove.grid(row=0, column=1, padx=5, pady=10)
 
-        self._command_button(self.win2, "Remove", lambda: self.delete_payment(),220)
-        self._exit_button(self.win2,220)
+        self._command_button(self.win2, "Remove", lambda: self.delete_payment(), 220)
+        self._exit_button(self.win2, 220)
         self.win2.mainloop()
 
     def _popup_labelframe(self, row, title, width_label):
