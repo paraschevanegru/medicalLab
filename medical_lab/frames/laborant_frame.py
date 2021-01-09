@@ -81,8 +81,8 @@ class LaborantFrame(TitleFrame):
         self._dashboard_button("Remove test bulletin", lambda: self.remove_testBulletin(), 3)
         self._dashboard_button("Update Test bulletin", lambda: self.update_testBulletin(), 4)
         self._dashboard_button("View administered tests", lambda: self.populate_table_adminstered_tests(), 5, (30, 5))
-        self._dashboard_button("Update administrated test", lambda: self.update_administeredTest(), 6)
-        self._dashboard_button("Remove administrated test", lambda: self.remove_adminsteredtest(), 7)
+        self._dashboard_button("Update administered test", lambda: self.update_administeredTest(), 6)
+        self._dashboard_button("Remove administered test", lambda: self.remove_adminsteredtest(), 7)
 
     def _dashboard_button(self, title, command, row, pady=5):
         tk.Button(
@@ -102,10 +102,10 @@ class LaborantFrame(TitleFrame):
         if messagebox.askokcancel("Logout", "Are you sure you want to logout?"):
             self.controller.render_frame("LoginFrame")
 
-    def _popup_window(self, title):
+    def _popup_window(self, title,dim="500x500"):
         win2 = tk.Toplevel()
         win2.title(title)
-        win2.geometry("500x500")
+        win2.geometry(dim)
         win2.resizable(0, 0)
         win2.config(bg="gray97")
         return win2
@@ -146,26 +146,17 @@ class LaborantFrame(TitleFrame):
 
     def remove_adminsteredtest(self):
 
-        self.win2 = self._popup_window("Remove Administered Test")
+        self.win2 = self._popup_window("Remove Administered Test","500x300")
+        test_idefectuat_remove_frame = self._popup_labelframe(0, "Administered Test ID", self.popup_width_label)
+        self.test_idefectuat_remove = tk.Entry(test_idefectuat_remove_frame)
+        self.test_idefectuat_remove.grid(row=0, column=1, padx=5, pady=10)
 
-        cod_programare_remove_frame = self._popup_labelframe(0, "Appointment Code", self.popup_width_label)
-        self.cod_programare_remove = tk.Entry(cod_programare_remove_frame)
-        self.cod_programare_remove.grid(row=0, column=1, padx=5, pady=10)
-
-        data_remove_frame = self._popup_labelframe(1, "Appointment Date", self.popup_width_label)
-        self.data_prog_remove = tk.Entry(data_remove_frame)
-        self.data_prog_remove.grid(row=0, column=1, padx=5, pady=10)
-
-        nume_pacient_remove_frame = self._popup_labelframe(2, "Pacient Name", self.popup_width_label)
-        self.nume_pacient_insert = tk.Entry(nume_pacient_remove_frame)
-        self.nume_pacient_insert.grid(row=0, column=1, padx=5, pady=10)
-
-        cnp_remove_frame = self._popup_labelframe(3, "Pacient CNP", self.popup_width_label)
+        cnp_remove_frame = self._popup_labelframe(1, "Pacient CNP", self.popup_width_label)
         self.cnp_remove = tk.Entry(cnp_remove_frame)
         self.cnp_remove.grid(row=0, column=1, padx=5, pady=10)
 
-        self._command_button(self.win2, "Remove", lambda: self.Quit)
-        self._exit_button(self.win2)
+        self._command_button(self.win2, "Remove", lambda: self.delete_administered_test(),220)
+        self._exit_button(self.win2,220)
         self.win2.mainloop()
 
     def add_testBulletin(self):
@@ -209,48 +200,53 @@ class LaborantFrame(TitleFrame):
 
         self.win2 = self._popup_window("Update Test Bulletin")
 
-        cod_programare_update_frame = self._popup_labelframe(0, "Appointment Code", self.popup_width_label)
-        self.cod_programare_update = tk.Entry(cod_programare_update_frame)
-        self.cod_programare_update.grid(row=0, column=1, padx=5, pady=10)
+        id_bulletinTest_update_frame = self._popup_labelframe(0, "Test Bulletin ID", self.popup_width_label)
+        self.id_bulletinTest_update = tk.Entry(id_bulletinTest_update_frame)
+        self.id_bulletinTest_update.grid(row=0, column=1, padx=5, pady=10)
 
-        data_update_frame = self._popup_labelframe(1, "Appointment Date", self.popup_width_label)
-        self.data_prog_update = tk.Entry(data_update_frame)
-        self.data_prog_update.grid(row=0, column=1, padx=5, pady=10)
+        self._popup_labelframe(1, "Validation Date", self.popup_width_label)
+        now = datetime.now()
+        self.validation_date_update = Calendar(
+            self.win2,
+            font="Helvetica",
+            selectmode="day",
+            locale="en_US",
+            cursor="hand1",
+            year=now.year,
+            month=now.month,
+            day=now.day,
+            mindate=now,
+            maxdate=now,
+            date_pattern="dd.mm.y",
+        )
+        self.validation_date_update.grid(row=1, column=0, padx=5, pady=10)
 
-        nume_pacient_update_frame = self._popup_labelframe(2, "Pacient Name", self.popup_width_label)
-        self.nume_pacient_update = tk.Entry(nume_pacient_update_frame)
-        self.nume_pacient_update.grid(row=0, column=1, padx=5, pady=10)
+        result_update_frame = self._popup_labelframe(2, "Result ", self.popup_width_label)
+        self.result_update = tk.Entry(result_update_frame)
+        self.result_update.grid(row=0, column=1, padx=5, pady=10)
 
         cnp_update_frame = self._popup_labelframe(3, "Pacient CNP", self.popup_width_label)
         self.cnp_update = tk.Entry(cnp_update_frame)
         self.cnp_update.grid(row=0, column=1, padx=5, pady=10)
 
-        self._command_button(self.win2, "Update", lambda: self.Quit)
+        self._command_button(self.win2, "Update", lambda: self.update_test_bulletin())
         self._exit_button(self.win2)
         self.win2.mainloop()
 
     def remove_testBulletin(self):
 
-        self.win2 = self._popup_window("Remove Test Bulletin")
+        self.win2 = self._popup_window("Remove Test Bulletin","500x300")
 
-        cod_programare_remove_frame = self._popup_labelframe(0, "Appointment Code", self.popup_width_label)
-        self.cod_programare_remove = tk.Entry(cod_programare_remove_frame)
-        self.cod_programare_remove.grid(row=0, column=1, padx=5, pady=10)
+        id_bulletinTest_remove_frame = self._popup_labelframe(0, "Test Bulletin ID", self.popup_width_label)
+        self.id_bulletinTest_remove = tk.Entry(id_bulletinTest_remove_frame)
+        self.id_bulletinTest_remove.grid(row=0, column=1, padx=5, pady=10)
 
-        data_remove_frame = self._popup_labelframe(1, "Appointment Date", self.popup_width_label)
-        self.data_prog_remove = tk.Entry(data_remove_frame)
-        self.data_prog_remove.grid(row=0, column=1, padx=5, pady=10)
-
-        nume_pacient_remove_frame = self._popup_labelframe(2, "Pacient Name", self.popup_width_label)
-        self.nume_pacient_remove = tk.Entry(nume_pacient_remove_frame)
-        self.nume_pacient_remove.grid(row=0, column=1, padx=5, pady=10)
-
-        cnp_remove_frame = self._popup_labelframe(3, "Pacient CNP", self.popup_width_label)
+        cnp_remove_frame = self._popup_labelframe(1, "Pacient CNP", self.popup_width_label)
         self.cnp_remove = tk.Entry(cnp_remove_frame)
         self.cnp_remove.grid(row=0, column=1, padx=5, pady=10)
 
-        self._command_button(self.win2, "Remove", lambda: self.Quit)
-        self._exit_button(self.win2)
+        self._command_button(self.win2, "Remove", lambda: self.delete_test_bulletin(),220)
+        self._exit_button(self.win2,220)
         self.win2.mainloop()
 
     def _popup_labelframe(self, row, title, width_label):
@@ -361,6 +357,44 @@ class LaborantFrame(TitleFrame):
 
         self.controller.run_query(query_adminstered_test)
         self.populate_table_adminstered_tests()
+    
+    def delete_administered_test(self):
+        if not self.test_idefectuat_remove:
+            return
+        if not self.cnp_remove:
+            return
+        id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_remove.get())
+        query_delete =f"DELETE from teste_efectuate where id_test_efectuat = '{self.test_idefectuat_remove.get()}' and id_pacient = '{id_pacient}'"
+
+        self.controller.run_query(query_delete)
+        self.populate_table_adminstered_tests()
+    
+    def delete_test_bulletin(self):
+        if not self.id_bulletinTest_remove:
+            return
+        if not self.cnp_remove:
+            return
+        id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_remove.get())
+        query_delete=f"DELETE from buletine_teste where id_buletin_test = '{self.id_bulletinTest_remove.get()}'"
+
+        self.controller.run_query(query_delete)
+        self.populate_table_test_bulletin()
+
+    def update_test_bulletin(self):
+        if not self.cnp_update:
+            return
+        if not self.id_bulletinTest_update:
+            return
+        if not self.validation_date_update:
+            return
+        if not self.result_update:
+            return
+        id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_update.get())
+        query_update=f"UPDATE buletine_teste SET data_validare=TO_DATE('{self.validation_date_update.get_date()}', 'DD.MM.YYYY'), rezultat = '{self.result_update.get()}' where id_buletin_test = '{self.id_bulletinTest_update.get()}' and id_test_efectuat = '{id_pacient}' "
+
+        self.controller.run_query(query_update)
+        self.populate_table_test_bulletin()
+        
 
     def populate_table_test_bulletin(self):
         if self.table:
