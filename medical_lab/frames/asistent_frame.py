@@ -52,15 +52,6 @@ class AsistentFrame(TitleFrame):
             fg=self.btn_fg,
         ).grid(row=0, column=2, padx=5, pady=15, sticky="e")
 
-        tk.Label(
-            welcome_label_frame,
-            text="Search",
-            bg=welcome_label_frame["bg"],
-            fg="#4380FA",
-            width=18,
-        ).grid(row=0, column=5, padx=5, pady=10)
-        self.search_button = tk.Entry(welcome_label_frame)
-        self.search_button.grid(row=0, column=6, padx=5, pady=10)
         self.base_frame = main_frame
         self.table = None
         self.populate_table_appointments()

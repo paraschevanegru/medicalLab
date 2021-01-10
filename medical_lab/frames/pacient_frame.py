@@ -28,7 +28,7 @@ class PacientFrame(TitleFrame):
             pacient_frame.columnconfigure(c, weight=1)
 
         welcome_label_frame = tk.Frame(pacient_frame, bg="gray97", bd=0)
-        welcome_label_frame.grid(column=1, row=0, columnspan=6, rowspan=1, sticky=tk.NSEW)
+        welcome_label_frame.grid(column=1, row=0, columnspan=6, rowspan=2, sticky=tk.NSEW)
 
         self.init_dashboard(pacient_frame)
 
@@ -38,7 +38,7 @@ class PacientFrame(TitleFrame):
             font=self.title_font,
             bg=self.bg_color,
             fg="#99CCFF",
-        ).grid(row=0, column=1, padx=5, pady=15)
+        ).grid(row=0, column=1, padx=5)
         tk.Button(
             welcome_label_frame,
             text="Logout",
@@ -46,17 +46,8 @@ class PacientFrame(TitleFrame):
             command=self.on_logout,
             bg="#4380FA",
             fg=self.btn_fg,
-        ).grid(row=0, column=2, padx=5, pady=15, sticky="e")
+        ).grid(row=0, column=2, padx=5, sticky="e")
 
-        tk.Label(
-            welcome_label_frame,
-            text="Search",
-            bg=welcome_label_frame["bg"],
-            fg="#4380FA",
-            width=18,
-        ).grid(row=0, column=5)
-        self.search_button = tk.Entry(welcome_label_frame)
-        self.search_button.grid(row=0, column=6, padx=5, pady=10)
         self.base_frame = pacient_frame
         self.table = None
 
