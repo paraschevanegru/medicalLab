@@ -91,6 +91,8 @@ class PacientFrame(TitleFrame):
 
     def on_logout(self):
         if messagebox.askokcancel("Logout", "Are you sure you want to logout?"):
+            if hasattr(self, "win2"):
+                self.win2.destroy()
             self.controller.render_frame("LoginFrame")
 
     def populate_table_bulletin_test(self):
@@ -118,6 +120,7 @@ class PacientFrame(TitleFrame):
         )
         for row in query_select:
             self.table.insert("", "end", values=row)
+
     def populate_table_payments(self):
         if self.table:
             self.table.clear_table()
