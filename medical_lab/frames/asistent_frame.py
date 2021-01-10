@@ -431,13 +431,13 @@ class AsistentFrame(TitleFrame):
         return flatten
 
     def check_cnp(self, value):
-        if len(value) == 13 and value[1] in [1, 2, 5, 6]:
+        if len(value) == 13 and int(value[0]) in [1, 2, 5, 6]:
             pass
         else:
             messagebox.showinfo("OK", "Wrong CNP")
 
     def check_phone(self, value):
-        if len(value) == 10 and value[1] == 0 and value[2] in [2, 3, 7]:
+        if len(value) == 10 and int(value[0]) == 0 and int(value[1]) in [2, 3, 7]:
             pass
         else:
             messagebox.showinfo("OK", "Wrong PHONE")
@@ -499,6 +499,8 @@ class AsistentFrame(TitleFrame):
             return
         if not self.cnp_insert:
             return
+        else:
+            self.check_cnp(self.cnp_insert.get())
         id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_insert.get())
         id_asistent = self._return_id("asistenti", "asistent", "cod_asistent", self.employee_code.get())
         query_existing_appointments = f"""SELECT COUNT(cod_programare) AS Total_programari
@@ -525,12 +527,20 @@ class AsistentFrame(TitleFrame):
             return
         if not self.cnp_update:
             return
+        else:
+            self.check_cnp(self.cnp_update.get())
         id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_update.get())
         query_update = f"UPDATE programari SET cod_programare='{self.cod_programare_update.get()}', data_programare=TO_DATE('{self.data_prog_update.get_date()}', 'DD.MM.YYYY') WHERE id_pacient={id_pacient}"
         self.controller.run_query(query_update)
         self.populate_table_appointments()
 
     def delete_appointment(self):
+        if not self.cnp_remove:
+            return
+        else:
+            self.check_cnp(self.cnp_remove.get())
+        if not self.cod_programare_remove:
+            return
         if not self.table.is_item_selected():
             messagebox.showinfo("Delete Error", "Item not selected")
             return
@@ -560,8 +570,8 @@ class AsistentFrame(TitleFrame):
     def calculate_payment(self):
         if not self.cnp_pay_insert:
             return
-        # else:
-        #     self.check_cnp(self.cnp_pay_insert.get())
+        else:
+            self.check_cnp(self.cnp_pay_insert.get())
         query_total = f"""SELECT p.nume_pacient, SUM(t.pret_test) AS total
                         FROM pacienti p,teste t, teste_efectuate e
                         WHERE cnp = '{self.cnp_pay_insert.get()}'
@@ -580,6 +590,8 @@ class AsistentFrame(TitleFrame):
             return
         if not self.cnp_pay_insert:
             return
+        else:
+            self.check_cnp(self.cnp_pay_insert.get())
         id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_pay_insert.get())
         query_payment = f"INSERT INTO plati VALUES (NULL, TO_DATE('{self.data_plata_insert.get_date()}', 'DD.MM.YYYY'), {self.total_plata_insert.get()}, DEFAULT,  {id_pacient})"
 
@@ -594,12 +606,20 @@ class AsistentFrame(TitleFrame):
             return
         if not self.cnp_update:
             return
+        else:
+            self.check_cnp(self.cnp_update.get())
         id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_update.get())
         query_update = f"UPDATE plati SET total_plata='{self.total_plata_update.get()}'  WHERE id_pacient={id_pacient} AND id_plata='{self.id_plata_update.get()}'"
         self.controller.run_query(query_update)
         self.populate_table_payments()
 
     def delete_payment(self):
+        if not self.cnp_remove:
+            return
+        else:
+            self.check_cnp(self.cnp_remove.get())
+        if not self.id_plata_remove:
+            return
         if not self.table.is_item_selected():
             messagebox.showinfo("Delete Error", "Item not selected")
             return
@@ -640,6 +660,8 @@ class AsistentFrame(TitleFrame):
             return
         if not self.cnp_insert:
             return
+        else:
+            self.check_cnp(self.cnp_insert.get())
         id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_insert.get())
         id_asistent = self._return_id("asistenti", "asistent", "cod_asistent", self.employee_code.get())
         id_laborant = self._return_id("laboranti", "laborant", "cod_laborant", "0")
@@ -650,6 +672,12 @@ class AsistentFrame(TitleFrame):
         self.populate_table_adminstered_tests()
 
     def delete_adminstered_test(self):
+        if not self.cnp_remove:
+            return
+        else:
+            self.check_cnp(self.cnp_remove.get())
+        if not self.nume_test_remove:
+            return
         if not self.table.is_item_selected():
             messagebox.showinfo("Delete Error", "Item not selected")
             return

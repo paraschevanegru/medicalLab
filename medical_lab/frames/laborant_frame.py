@@ -287,12 +287,6 @@ class LaborantFrame(TitleFrame):
         else:
             return result[0][0]
 
-    def _get_tests(self):
-        query_select = "SELECT nume_test from teste"
-        result = self.controller.run_query(query_select)
-        flatten = [item for sublist in result for item in sublist]
-        return flatten
-
     def populate_table_adminstered_tests(self):
         if self.table:
             self.table.clear_table()
@@ -323,6 +317,8 @@ class LaborantFrame(TitleFrame):
             return
         if not self.cnp_insert:
             return
+        else:
+            self.check_cnp(self.cnp_insert.get())
         if not self.validation_date_insert:
             return
         query_test_bulletin = f"INSERT INTO buletine_teste VALUES (NULL, TO_DATE('{self.validation_date_insert.get_date()}', 'DD.MM.YYYY'),'{self.result_insert.get()}','{self.id_test_efec_insert.get()}' )"
@@ -330,7 +326,7 @@ class LaborantFrame(TitleFrame):
         self.populate_table_test_bulletin()
 
     def check_cnp(self, value):
-        if len(value) == 13 and value[1] in [1, 2, 5, 6]:
+        if len(value) == 13 and int(value[0]) in [1, 2, 5, 6]:
             pass
         else:
             messagebox.showinfo("OK", "Wrong CNP")

@@ -275,7 +275,7 @@ END;
 /
 
 CREATE OR REPLACE TRIGGER trg_data_plata 
-    BEFORE INSERT OR UPDATE ON Plati 
+    BEFORE INSERT ON Plati 
     FOR EACH ROW 
 BEGIN
     IF(trunc(:new.data_plata ) != trunc(SYSDATE))
