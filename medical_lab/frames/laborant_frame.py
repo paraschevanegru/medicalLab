@@ -50,15 +50,6 @@ class LaborantFrame(TitleFrame):
             fg=self.btn_fg,
         ).grid(row=0, column=2, padx=5, pady=15, sticky="e")
 
-        tk.Label(
-            welcome_label_frame,
-            text="Search",
-            bg=welcome_label_frame["bg"],
-            fg="#4380FA",
-            width=18,
-        ).grid(row=0, column=5)
-        self.search_button = tk.Entry(welcome_label_frame)
-        self.search_button.grid(row=0, column=6, padx=5, pady=10)
         self.base_frame = laborant_frame
         self.table = None
         self.populate_table_test_bulletin()
@@ -200,7 +191,7 @@ class LaborantFrame(TitleFrame):
 
     def update_testBulletin(self):
 
-        self.win2 = self._popup_window("Update Test Bulletin","500x500")
+        self.win2 = self._popup_window("Update Test Bulletin", "500x500")
 
         id_bulletinTest_update_frame = self._popup_labelframe(0, "Test Bulletin ID", self.popup_width_label)
         self.id_bulletinTest_update = tk.Entry(id_bulletinTest_update_frame)
@@ -227,7 +218,6 @@ class LaborantFrame(TitleFrame):
         self.result_update = tk.Entry(result_update_frame)
         self.result_update.grid(row=0, column=1, padx=35, pady=10)
 
-
         self._command_button(self.win2, "Update", lambda: self.update_test_bulletin())
         self._exit_button(self.win2)
         self.win2.mainloop()
@@ -239,9 +229,9 @@ class LaborantFrame(TitleFrame):
         id_bulletinTest_remove_frame = self._popup_labelframe(0, "Test Bulletin ID", self.popup_width_label)
         self.id_bulletinTest_remove = tk.Entry(id_bulletinTest_remove_frame)
         self.id_bulletinTest_remove.grid(row=0, column=1, padx=35, pady=35)
-                
+
         self._command_button(self.win2, "Remove", lambda: self.delete_test_bulletin(), 120)
-        self._exit_button(self.win2,120)
+        self._exit_button(self.win2, 120)
         self.win2.mainloop()
 
     def _popup_labelframe(self, row, title, width_label):
@@ -297,12 +287,6 @@ class LaborantFrame(TitleFrame):
         else:
             return result[0][0]
 
-    def _get_tests(self):
-        query_select = "SELECT nume_test from teste"
-        result = self.controller.run_query(query_select)
-        flatten = [item for sublist in result for item in sublist]
-        return flatten
-
     def populate_table_adminstered_tests(self):
         if self.table:
             self.table.clear_table()
@@ -333,11 +317,19 @@ class LaborantFrame(TitleFrame):
             return
         if not self.cnp_insert:
             return
+        else:
+            self.check_cnp(self.cnp_insert.get())
         if not self.validation_date_insert:
             return
         query_test_bulletin = f"INSERT INTO buletine_teste VALUES (NULL, TO_DATE('{self.validation_date_insert.get_date()}', 'DD.MM.YYYY'),'{self.result_insert.get()}','{self.id_test_efec_insert.get()}' )"
         self.controller.run_query(query_test_bulletin)
         self.populate_table_test_bulletin()
+
+    def check_cnp(self, value):
+        if len(value) == 13 and int(value[0]) in [1, 2, 5, 6]:
+            pass
+        else:
+            messagebox.showinfo("OK", "Wrong CNP")
 
     def update_adminstered_test(self):
         if not self.table.is_item_selected():
@@ -349,6 +341,8 @@ class LaborantFrame(TitleFrame):
             return
         if not self.cnp_update:
             return
+        else:
+            self.check_cnp(self.cnp_update.get())
         id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_update.get())
         id_laborant = self._return_id("laboranti", "laborant", "cod_laborant", self.employee_code.get())
         query_adminstered_test = f"UPDATE teste_efectuate SET data_prelucrare = TO_DATE('{self.data_prelucrare_update.get_date()}', 'DD.MM.YYYY'), id_laborant='{id_laborant}' WHERE id_pacient='{id_pacient}' AND id_test_efectuat='{self.id_test_efec_update.get()}'"
@@ -364,6 +358,8 @@ class LaborantFrame(TitleFrame):
             return
         if not self.cnp_remove:
             return
+        else:
+            self.check_cnp(self.cnp_remove.get())
         id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_remove.get())
         query_delete = f"DELETE from teste_efectuate where id_test_efectuat = '{self.test_idefectuat_remove.get()}' and id_pacient = '{id_pacient}'"
 
@@ -376,9 +372,6 @@ class LaborantFrame(TitleFrame):
             return
         if not self.id_bulletinTest_remove:
             return
-        if not self.cnp_remove:
-            return
-        id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_remove.get())
         query_delete = f"DELETE from buletine_teste where id_buletin_test = '{self.id_bulletinTest_remove.get()}'"
 
         self.controller.run_query(query_delete)
@@ -390,6 +383,8 @@ class LaborantFrame(TitleFrame):
             return
         if not self.cnp_update:
             return
+        else:
+            self.check_cnp(self.cnp_update.get())
         if not self.id_bulletinTest_update:
             return
         if not self.validation_date_update:
