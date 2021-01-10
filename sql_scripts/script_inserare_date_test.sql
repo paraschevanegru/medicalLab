@@ -165,3 +165,7 @@ INSERT INTO plati VALUES (NULL, SYSDATE,50, DEFAULT, (SELECT id_pacient FROM pac
 SELECT * FROM plati;
 
 
+COMMIT;
+
+
+

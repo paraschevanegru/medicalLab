@@ -59,7 +59,6 @@ class PacientFrame(TitleFrame):
         self.search_button.grid(row=0, column=6, padx=5, pady=10)
         self.base_frame = pacient_frame
         self.table = None
-        # self.populate_table_payments()
 
     def init_dashboard(self, parent):
         self.pacient_code = tk.StringVar()
@@ -99,7 +98,6 @@ class PacientFrame(TitleFrame):
         if self.table:
             self.table.clear_table()
             self.table.destroy()
-        # query_view = list(map("".join, self.controller.get_columns_name("buletine_teste")))[:1]
         query_view = list(map("".join, self.controller.get_columns_name("pacienti")))[1:3]
         query_view.extend(list(map("".join, self.controller.get_columns_name("teste")))[1:2])
         query_view.extend(list(map("".join, self.controller.get_columns_name("buletine_teste")))[2:3])
@@ -125,8 +123,7 @@ class PacientFrame(TitleFrame):
         if self.table:
             self.table.clear_table()
             self.table.destroy()
-        # query_view = list(map("".join, self.controller.get_columns_name("buletine_teste")))[:1]
-        query_view=list(map("".join, self.controller.get_columns_name("pacienti")))[1:2]
+        query_view = list(map("".join, self.controller.get_columns_name("pacienti")))[1:2]
         query_view.extend(list(map("".join, self.controller.get_columns_name("teste")))[1:2])
         query_view.extend(list(map("".join, self.controller.get_columns_name("teste")))[2:3])
         query_view.extend(list(map("".join, self.controller.get_columns_name("teste")))[3:4])
