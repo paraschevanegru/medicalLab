@@ -99,8 +99,8 @@ class PacientFrame(TitleFrame):
         if self.table:
             self.table.clear_table()
             self.table.destroy()
-        query_view = list(map("".join, self.controller.get_columns_name("buletine_teste")))[:1]
-        query_view.extend(list(map("".join, self.controller.get_columns_name("pacienti")))[1:3])
+        # query_view = list(map("".join, self.controller.get_columns_name("buletine_teste")))[:1]
+        query_view = list(map("".join, self.controller.get_columns_name("pacienti")))[1:3]
         query_view.extend(list(map("".join, self.controller.get_columns_name("teste")))[1:2])
         query_view.extend(list(map("".join, self.controller.get_columns_name("buletine_teste")))[2:3])
         query_view.extend(list(map("".join, self.controller.get_columns_name("detalii_teste")))[1:2])
@@ -110,7 +110,7 @@ class PacientFrame(TitleFrame):
         self.table.grid(row=1, column=1, columnspan=6, rowspan=9, sticky=tk.NSEW)
         self.table.tree.bind("<<TreeviewSelect>>")
         query_select = self.controller.run_query(
-            f"""SELECT b.id_buletin_test, p.nume_pacient,p.cnp, t.nume_test, b.rezultat, d.interval_referinta, b.data_validare
+            f"""SELECT  p.nume_pacient,p.cnp, t.nume_test, b.rezultat, d.interval_referinta, b.data_validare
                 FROM teste_efectuate e, teste t, pacienti p, detalii_teste d, buletine_teste b
                 WHERE e.id_test = t.id_test 
                 AND d.id_test =  t.id_test
@@ -125,8 +125,8 @@ class PacientFrame(TitleFrame):
         if self.table:
             self.table.clear_table()
             self.table.destroy()
-        query_view = list(map("".join, self.controller.get_columns_name("buletine_teste")))[:1]
-        query_view.extend(list(map("".join, self.controller.get_columns_name("pacienti")))[1:2])
+        # query_view = list(map("".join, self.controller.get_columns_name("buletine_teste")))[:1]
+        query_view=list(map("".join, self.controller.get_columns_name("pacienti")))[1:2]
         query_view.extend(list(map("".join, self.controller.get_columns_name("teste")))[1:2])
         query_view.extend(list(map("".join, self.controller.get_columns_name("teste")))[2:3])
         query_view.extend(list(map("".join, self.controller.get_columns_name("teste")))[3:4])
@@ -136,7 +136,7 @@ class PacientFrame(TitleFrame):
         self.table.grid(row=1, column=1, columnspan=6, rowspan=9, sticky=tk.NSEW)
         self.table.tree.bind("<<TreeviewSelect>>")
         query_select = self.controller.run_query(
-            f"""SELECT b.id_buletin_test, p.nume_pacient, t.nume_test, t.pret_test,t.moneda,pl.data_plata
+            f"""SELECT  p.nume_pacient, t.nume_test, t.pret_test,t.moneda,pl.data_plata
                 FROM teste_efectuate e, teste t, pacienti p, detalii_teste d, buletine_teste b,plati pl
                 WHERE e.id_test = t.id_test 
                 AND d.id_test =  t.id_test

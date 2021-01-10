@@ -200,11 +200,11 @@ class LaborantFrame(TitleFrame):
 
     def update_testBulletin(self):
 
-        self.win2 = self._popup_window("Update Test Bulletin")
+        self.win2 = self._popup_window("Update Test Bulletin","500x500")
 
         id_bulletinTest_update_frame = self._popup_labelframe(0, "Test Bulletin ID", self.popup_width_label)
         self.id_bulletinTest_update = tk.Entry(id_bulletinTest_update_frame)
-        self.id_bulletinTest_update.grid(row=0, column=1, padx=5, pady=10)
+        self.id_bulletinTest_update.grid(row=0, column=1, padx=35, pady=10)
 
         self._popup_labelframe(1, "Validation Date", self.popup_width_label)
         now = datetime.now()
@@ -221,15 +221,12 @@ class LaborantFrame(TitleFrame):
             maxdate=now,
             date_pattern="dd.mm.y",
         )
-        self.validation_date_update.grid(row=1, column=0, padx=5, pady=10)
+        self.validation_date_update.grid(row=2, column=0, padx=35, pady=10)
 
-        result_update_frame = self._popup_labelframe(2, "Result ", self.popup_width_label)
+        result_update_frame = self._popup_labelframe(3, "Result ", self.popup_width_label)
         self.result_update = tk.Entry(result_update_frame)
-        self.result_update.grid(row=0, column=1, padx=5, pady=10)
+        self.result_update.grid(row=0, column=1, padx=35, pady=10)
 
-        cnp_update_frame = self._popup_labelframe(3, "Pacient CNP", self.popup_width_label)
-        self.cnp_update = tk.Entry(cnp_update_frame)
-        self.cnp_update.grid(row=0, column=1, padx=5, pady=10)
 
         self._command_button(self.win2, "Update", lambda: self.update_test_bulletin())
         self._exit_button(self.win2)
@@ -237,18 +234,14 @@ class LaborantFrame(TitleFrame):
 
     def remove_testBulletin(self):
 
-        self.win2 = self._popup_window("Remove Test Bulletin", "500x300")
+        self.win2 = self._popup_window("Remove Test Bulletin", "500x200")
 
         id_bulletinTest_remove_frame = self._popup_labelframe(0, "Test Bulletin ID", self.popup_width_label)
         self.id_bulletinTest_remove = tk.Entry(id_bulletinTest_remove_frame)
-        self.id_bulletinTest_remove.grid(row=0, column=1, padx=5, pady=10)
-
-        cnp_remove_frame = self._popup_labelframe(1, "Pacient CNP", self.popup_width_label)
-        self.cnp_remove = tk.Entry(cnp_remove_frame)
-        self.cnp_remove.grid(row=0, column=1, padx=5, pady=10)
-
-        self._command_button(self.win2, "Remove", lambda: self.delete_test_bulletin(), 220)
-        self._exit_button(self.win2, 220)
+        self.id_bulletinTest_remove.grid(row=0, column=1, padx=35, pady=35)
+                
+        self._command_button(self.win2, "Remove", lambda: self.delete_test_bulletin(), 120)
+        self._exit_button(self.win2,120)
         self.win2.mainloop()
 
     def _popup_labelframe(self, row, title, width_label):
@@ -347,6 +340,9 @@ class LaborantFrame(TitleFrame):
         self.populate_table_test_bulletin()
 
     def update_adminstered_test(self):
+        if not self.table.is_item_selected():
+            messagebox.showinfo("Update Error", "Item not selected")
+            return
         if not self.data_prelucrare_update:
             return
         if not self.id_test_efec_update:
@@ -361,6 +357,9 @@ class LaborantFrame(TitleFrame):
         self.populate_table_adminstered_tests()
 
     def delete_administered_test(self):
+        if not self.table.is_item_selected():
+            messagebox.showinfo("Delete Error", "Item not selected")
+            return
         if not self.test_idefectuat_remove:
             return
         if not self.cnp_remove:
@@ -372,6 +371,9 @@ class LaborantFrame(TitleFrame):
         self.populate_table_adminstered_tests()
 
     def delete_test_bulletin(self):
+        if not self.table.is_item_selected():
+            messagebox.showinfo("Delete Error", "Item not selected")
+            return
         if not self.id_bulletinTest_remove:
             return
         if not self.cnp_remove:
@@ -383,6 +385,9 @@ class LaborantFrame(TitleFrame):
         self.populate_table_test_bulletin()
 
     def update_test_bulletin(self):
+        if not self.table.is_item_selected():
+            messagebox.showinfo("Update Error", "Item not selected")
+            return
         if not self.cnp_update:
             return
         if not self.id_bulletinTest_update:
