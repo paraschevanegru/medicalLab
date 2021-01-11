@@ -266,7 +266,7 @@ class AsistentFrame(TitleFrame):
 
     def remove_administeredTest(self):
 
-        self.win2 = self._popup_window("Remove Administered Test", "500x300")
+        self.win2 = self._popup_window("Remove Administered Test", "500x500")
 
         self._popup_labelframe(0, "Choose the administrated test", 25)
 
@@ -278,8 +278,12 @@ class AsistentFrame(TitleFrame):
         self.cnp_remove = tk.Entry(cnp_remove_frame)
         self.cnp_remove.grid(row=0, column=1, padx=5, pady=10)
 
-        self._command_button(self.win2, "Remove", lambda: self.delete_adminstered_test(), 220)
-        self._exit_button(self.win2, 220)
+        id_test_efec_remove_frame = self._popup_labelframe(3, "Administered Test ID", self.popup_width_label)
+        self.id_test_efec_remove = tk.Entry(id_test_efec_remove_frame)
+        self.id_test_efec_remove.grid(row=0, column=1, padx=5, pady=10)
+
+        self._command_button(self.win2, "Remove", lambda: self.delete_adminstered_test(), 420)
+        self._exit_button(self.win2, 420)
         self.win2.mainloop()
 
     def add_payment(self):
@@ -691,8 +695,11 @@ class AsistentFrame(TitleFrame):
         if not self.table.is_item_selected():
             messagebox.showinfo("Delete Error", "Item not selected")
             return
+        if not self.id_test_efec_remove:
+            return
         id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_remove.get())
         id_test = self._return_id("teste", "test", "nume_test", self.nume_test_remove.get())
         query_delete = f"DELETE FROM teste_efectuate WHERE id_test='{id_test}' AND id_pacient={id_pacient}"
-        self.controller.run_query(query_delete)
+        query_bulletin = f"DELETE FROM buletine_teste WHERE id_test_efectuat='{self.id_test_efec_remove.get()}'"
+        self.controller.run_query_2(query_bulletin, query_delete)
         self.populate_table_adminstered_tests()

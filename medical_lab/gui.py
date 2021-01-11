@@ -59,6 +59,18 @@ class GUI:
             return None
         return query_results
 
+    def run_query_2(self, query1, query2):
+        cursor = self.connection.cursor()
+        cursor.execute(query1)
+        cursor.execute(query2)
+        try:
+            self.connection.commit()
+            cursor.close()
+        except cx_Oracle.InterfaceError:
+            self.connection.commit()
+            cursor.close()
+            return None
+
     def get_columns_name(self, table_name):
         query = f"SELECT column_name FROM USER_TAB_COLUMNS WHERE lower(table_name) = '{table_name}'"
         return self.run_query(query)
