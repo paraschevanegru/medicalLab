@@ -172,7 +172,6 @@ class LaborantFrame(TitleFrame):
             month=now.month,
             day=now.day,
             mindate=now,
-            maxdate=now,
             date_pattern="dd.mm.y",
         )
         self.validation_date_insert.grid(row=2, column=0, padx=5, pady=10)
@@ -209,7 +208,6 @@ class LaborantFrame(TitleFrame):
             month=now.month,
             day=now.day,
             mindate=now,
-            maxdate=now,
             date_pattern="dd.mm.y",
         )
         self.validation_date_update.grid(row=2, column=0, padx=35, pady=10)
@@ -381,18 +379,13 @@ class LaborantFrame(TitleFrame):
         if not self.table.is_item_selected():
             messagebox.showinfo("Update Error", "Item not selected")
             return
-        if not self.cnp_update:
-            return
-        else:
-            self.check_cnp(self.cnp_update.get())
         if not self.id_bulletinTest_update:
             return
         if not self.validation_date_update:
             return
         if not self.result_update:
             return
-        id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_update.get())
-        query_update = f"UPDATE buletine_teste SET data_validare=TO_DATE('{self.validation_date_update.get_date()}', 'DD.MM.YYYY'), rezultat = '{self.result_update.get()}' where id_buletin_test = '{self.id_bulletinTest_update.get()}' and id_test_efectuat = '{id_pacient}' "
+        query_update = f"UPDATE buletine_teste SET data_validare=TO_DATE('{self.validation_date_update.get_date()}', 'DD.MM.YYYY'), rezultat = '{self.result_update.get()}' where id_buletin_test = '{self.id_bulletinTest_update.get()}'"
 
         self.controller.run_query(query_update)
         self.populate_table_test_bulletin()

@@ -260,7 +260,7 @@ class AsistentFrame(TitleFrame):
         self.cnp_insert = tk.Entry(cnp_insert_frame)
         self.cnp_insert.grid(row=0, column=1, padx=5, pady=10)
 
-        self._command_button(self.win2, "Remove", lambda: self.delete_payment(), 450)
+        self._command_button(self.win2, "Insert", lambda: self.insert_adminstered_test(), 450)
         self._exit_button(self.win2, 450)
         self.win2.mainloop()
 
@@ -298,6 +298,7 @@ class AsistentFrame(TitleFrame):
             month=now.month,
             day=now.day,
             mindate=now,
+            maxdate=now,
             date_pattern="dd.mm.y",
         )
         self.data_plata_insert.grid(row=1, column=0, padx=5, pady=5)
@@ -530,8 +531,17 @@ class AsistentFrame(TitleFrame):
         else:
             self.check_cnp(self.cnp_update.get())
         id_pacient = self._return_id("pacienti", "pacient", "cnp", self.cnp_update.get())
-        query_update = f"UPDATE programari SET cod_programare='{self.cod_programare_update.get()}', data_programare=TO_DATE('{self.data_prog_update.get_date()}', 'DD.MM.YYYY') WHERE id_pacient={id_pacient}"
-        self.controller.run_query(query_update)
+        query_existing_appointments = f"""SELECT COUNT(cod_programare) AS Total_programari
+                                        FROM programari
+                                        WHERE data_programare=TO_DATE('{self.data_prog_update.get_date()}','DD.MM.YYYY')
+                                        group by cod_programare"""
+        total_programari = self.controller.run_query(query_existing_appointments)
+        if len(total_programari) > 0:
+            if total_programari[0][0] > 2:
+                messagebox.showinfo("Error", "Too many appointments for that day")
+        else:
+            query_update = f"UPDATE programari SET cod_programare='{self.cod_programare_update.get()}', data_programare=TO_DATE('{self.data_prog_update.get_date()}', 'DD.MM.YYYY') WHERE id_pacient={id_pacient}"
+            self.controller.run_query(query_update)
         self.populate_table_appointments()
 
     def delete_appointment(self):
